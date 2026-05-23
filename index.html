@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- ======================================================================
+     PART 1 — HEAD & META
+     Document setup, viewport, title
+     ====================================================================== -->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>PulmoPharm — UK Respiratory Pharmacology</title>
+
+<!-- ======================================================================
+     PART 2 — STYLES (CSS)
+     All visual styling: cards, slides, quizzes, drawer, settings, badges
+     ====================================================================== -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;font-family:'Plus Jakarta Sans',-apple-system,sans-serif;-webkit-tap-highlight-color:transparent;}
+html{-webkit-text-size-adjust:100%;}
+body{background:#f8fafc;color:#0f172a;-webkit-overflow-scrolling:touch;overscroll-behavior-y:none;min-height:100vh;}
+button{cursor:pointer;border:none;background:none;font-family:inherit;}
+input{font-family:inherit;}
+ol{list-style:none;}
+a{color:inherit;}
+
+/* layout */
+.app{min-height:100vh;}
+.wrap{max-width:768px;margin:0 auto;padding:20px 16px 40px;}
+.hidden{display:none!important;}
+
+/* header */
+header{background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid #e2e8f0;position:sticky;top:0;z-index:40;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
+.hbar{max-width:768px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:12px;}
+.burger{width:36px;height:36px;border-radius:12px;background:#e11d48;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 6px rgba(0,0,0,0.1);flex-shrink:0;}
+.htitle{flex:1;min-width:0;}
+.htitle h1{font-size:16px;font-weight:900;line-height:1;}
+.htitle h1 span{color:#e11d48;}
+.htitle p{font-size:10px;font-weight:700;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.settings-btn{width:36px;height:36px;border-radius:12px;background:#f1f5f9;color:#64748b;display:flex;align-items:center;justify-content:center;}
+
+/* streak */
+.streak{display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:12px;border:2px solid;font-size:12px;font-weight:900;}
+.streak.s0{background:#f8fafc;border-color:#e2e8f0;color:#94a3b8;}
+.streak.s1{background:#fffbeb;border-color:#fde68a;color:#d97706;}
+.streak.s5{background:#fff7ed;border-color:#fdba74;color:#ea580c;}
+.streak.s10{background:linear-gradient(to right,#fb923c,#ef4444);border-color:#fdba74;color:#fff;}
+.flame{font-size:14px;}
+.pulse{animation:pulse 1.5s cubic-bezier(0.4,0,0.6,1) infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+
+/* hero */
+.hero{border-radius:16px;padding:20px;margin-bottom:20px;color:#fff;box-shadow:0 10px 15px rgba(0,0,0,0.1);background:linear-gradient(to bottom right,#f43f5e,#db2777);}
+.hero-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;}
+.hero-icon{font-size:32px;flex-shrink:0;}
+.hero h2{font-size:20px;font-weight:900;margin-bottom:2px;}
+.hero p{font-size:12px;color:rgba(255,255,255,0.8);line-height:1.4;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{padding:4px 10px;background:rgba(255,255,255,0.15);border-radius:9999px;font-size:10px;font-weight:900;}
+
+.section-title{font-weight:900;color:#1e293b;font-size:16px;margin-bottom:12px;}
+
+/* cards grid */
+.grid{display:grid;grid-template-columns:1fr;gap:12px;}
+@media(min-width:640px){.grid{grid-template-columns:1fr 1fr;}}
+.card{background:#fff;border-radius:16px;border:2px solid #f1f5f9;padding:16px;text-align:left;transition:all .15s;position:relative;overflow:hidden;width:100%;}
+.card:hover{box-shadow:0 4px 12px rgba(0,0,0,0.08);border-color:#e2e8f0;}
+.card:active{transform:scale(0.98);}
+.card-badge{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);}
+.card-badge span{color:#fff;font-weight:900;font-size:10px;line-height:1;text-align:center;padding:0 4px;}
+.card-head{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:4px;}
+.card-head h3{font-weight:900;font-size:14px;color:#0f172a;line-height:1.2;}
+.card-drugs{color:#94a3b8;font-size:12px;font-weight:500;margin-bottom:8px;line-height:1.3;}
+.card-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.tag{font-size:9px;padding:2px 8px;border-radius:9999px;font-weight:900;}
+.tag-ready{background:#ecfdf5;color:#047857;border:1px solid #a7f3d0;}
+.tag-soon{background:#f1f5f9;color:#64748b;}
+.tag-ph{background:#fef2f2;color:#dc2626;border:1px solid #fecaca;}
+.tag-ref{background:#fff1f2;color:#e11d48;border:1px solid #fecdd3;}
+.diff{font-size:9px;padding:2px 8px;border-radius:9999px;border:1px solid;font-weight:900;}
+.diff-Easy{background:#ecfdf5;color:#047857;border-color:#a7f3d0;}
+.diff-Medium{background:#fffbeb;color:#b45309;border-color:#fde68a;}
+.diff-Hard{background:#fff1f2;color:#be123c;border-color:#fecdd3;}
+.check-corner{position:absolute;top:12px;right:12px;color:#10b981;font-size:20px;}
+
+/* slides */
+.back-btn{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;color:#94a3b8;padding:4px 0;}
+.progress-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.progress-num{font-size:10px;font-weight:900;color:#94a3b8;}
+.progress-bar{width:100%;background:#f1f5f9;border-radius:9999px;height:6px;overflow:hidden;margin-bottom:12px;}
+.progress-fill{height:6px;border-radius:9999px;transition:width .5s;}
+.slide-header{border-radius:16px;padding:16px;margin-bottom:12px;color:#fff;}
+.slide-header-row{display:flex;align-items:center;gap:12px;}
+.slide-header-icon{font-size:24px;flex-shrink:0;}
+.slide-header .label{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.6);}
+.slide-header h2{font-size:18px;font-weight:900;line-height:1.2;}
+.ph-badge{display:inline-block;padding:4px 10px;border-radius:9999px;font-size:9px;font-weight:900;background:#fee2e2;color:#b91c1c;border:1px solid #fecaca;margin-bottom:12px;}
+.slide-body{background:#fff;border-radius:16px;border:1px solid #f1f5f9;padding:16px;overflow-y:auto;box-shadow:0 1px 3px rgba(0,0,0,0.05);margin-bottom:12px;min-height:200px;max-height:45vh;}
+.slide-content{color:#1e293b;font-size:14px;line-height:1.6;white-space:pre-line;font-weight:500;}
+.drug-pills{margin-bottom:12px;display:flex;flex-wrap:wrap;gap:6px;}
+.drug-pill{padding:4px 10px;border-radius:8px;font-size:10px;font-weight:700;border:1px solid;}
+
+/* bibliography */
+.biblio{margin-top:20px;border-top:1px solid #f1f5f9;padding-top:12px;}
+.biblio-toggle{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;color:#e11d48;width:100%;text-align:left;}
+.biblio-toggle .chev{margin-left:auto;transition:transform .2s;}
+.biblio-toggle.open .chev{transform:rotate(180deg);}
+.biblio-list{margin-top:8px;display:flex;flex-direction:column;gap:8px;}
+.biblio-item{font-size:10px;color:#64748b;line-height:1.5;padding-left:12px;border-left:2px solid #fecdd3;}
+.biblio-item .num{font-weight:900;color:#e11d48;margin-right:4px;}
+.biblio-item a{color:#fb7185;text-decoration:underline;word-break:break-all;}
+
+/* nav buttons */
+.nav-row{display:flex;gap:10px;}
+.nav-btn{flex:1;padding:14px;border-radius:12px;font-weight:900;font-size:14px;min-height:48px;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;}
+.nav-btn:active{transform:scale(0.97);}
+.nav-prev{background:#fff;border:2px solid #e2e8f0;color:#94a3b8;}
+.nav-prev:disabled{opacity:0.3;}
+.nav-next{color:#fff;box-shadow:0 4px 6px rgba(0,0,0,0.1);}
+.nav-quiz{background:linear-gradient(to right,#10b981,#0d9488);color:#fff;box-shadow:0 4px 6px rgba(0,0,0,0.1);}
+
+/* quiz */
+.quiz-intro{text-align:center;}
+.quiz-icon{font-size:48px;margin-bottom:12px;}
+.quiz-pill{display:inline-block;padding:4px 12px;border-radius:9999px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;border:1px solid;margin-bottom:8px;}
+.quiz-intro h2{font-size:24px;font-weight:900;color:#0f172a;margin-bottom:4px;}
+.quiz-intro .sub{color:#94a3b8;font-size:14px;margin-bottom:4px;}
+.quiz-intro .count{color:#94a3b8;font-size:12px;margin-bottom:28px;}
+.btn-primary{padding:16px 40px;color:#fff;border-radius:16px;font-weight:900;font-size:16px;box-shadow:0 10px 15px rgba(0,0,0,0.15);transition:transform .15s;}
+.btn-primary:active{transform:scale(0.95);}
+.quiz-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.quiz-qnum{font-size:10px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:0.1em;}
+.quiz-score{padding:4px 10px;border-radius:8px;font-size:10px;font-weight:900;border:1px solid;}
+.quiz-prompt{border-radius:16px;padding:16px;margin-bottom:16px;color:#fff;}
+.quiz-prompt .qlabel{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.6);margin-bottom:4px;}
+.quiz-prompt .qtext{font-weight:700;font-size:14px;line-height:1.3;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.options.mcq{display:grid;grid-template-columns:1fr;gap:8px;}
+@media(min-width:640px){.options.mcq{grid-template-columns:1fr 1fr;}}
+.opt{width:100%;padding:14px 16px;border-radius:12px;border:2px solid #e2e8f0;background:#fff;color:#334155;font-weight:700;font-size:14px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:52px;transition:all .15s;}
+.opt:active{transform:scale(0.97);}
+.opt.correct{background:#ecfdf5;border-color:#10b981;color:#065f46;box-shadow:0 0 0 2px #a7f3d0;}
+.opt.wrong{background:#fff1f2;border-color:#fb7185;color:#be123c;opacity:0.7;}
+.opt.dim{background:#f8fafc;border-color:#f1f5f9;color:#94a3b8;opacity:0.4;}
+.opt .ic{flex-shrink:0;font-size:16px;}
+
+/* matching */
+.match-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.match-head p{font-size:12px;font-weight:900;color:#475569;}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.match-col{display:flex;flex-direction:column;gap:6px;}
+.match-coltitle{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;color:#94a3b8;text-align:center;margin-bottom:4px;}
+.match-item{width:100%;padding:12px 10px;border-radius:12px;font-size:12px;font-weight:900;border:2px solid #e2e8f0;background:#fff;color:#1e293b;text-align:left;line-height:1.3;min-height:44px;transition:all .15s;}
+.match-item:active{transform:scale(0.97);}
+.match-item.matched{opacity:0.4;background:#ecfdf5;border-color:#a7f3d0;color:#047857;}
+.match-item.sel-drug{color:#fff;border-color:transparent;box-shadow:0 4px 6px rgba(0,0,0,0.15);}
+.match-item.sel-cond{background:#0f172a;color:#fff;border-color:transparent;box-shadow:0 4px 6px rgba(0,0,0,0.15);}
+
+/* typing */
+.type-input{width:100%;background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:12px 16px;font-size:14px;font-weight:700;outline:none;transition:border .15s;margin-bottom:12px;}
+.type-input:focus{border-color:#fb7185;}
+.type-result{border-radius:12px;padding:12px;margin-bottom:12px;border:2px solid;}
+.type-result.correct{background:#ecfdf5;border-color:#10b981;}
+.type-result.correct p{font-weight:900;color:#047857;display:flex;align-items:center;gap:8px;}
+.type-result.wrong{background:#fff1f2;border-color:#fb7185;}
+.type-result.wrong .t{font-weight:900;color:#be123c;display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.type-result.wrong .a{color:#e11d48;font-size:14px;}
+.btn-full{width:100%;padding:14px;color:#fff;border-radius:12px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-full:disabled{opacity:0.4;}
+
+/* complete */
+.complete{text-align:center;}
+.complete .emoji{font-size:48px;margin-bottom:12px;}
+.complete h2{font-size:20px;font-weight:900;color:#0f172a;margin-bottom:4px;}
+.complete .score{color:#64748b;font-weight:700;margin-bottom:16px;}
+.complete-bar{width:100%;max-width:320px;margin:0 auto 20px;background:#f1f5f9;border-radius:9999px;height:10px;overflow:hidden;}
+.complete-fill{height:10px;border-radius:9999px;transition:width .7s;}
+
+/* done */
+.done{text-align:center;}
+.done .trophy{font-size:60px;margin-bottom:16px;}
+.done h2{font-size:24px;font-weight:900;color:#0f172a;margin-bottom:4px;}
+.done-pill{display:inline-block;padding:8px 16px;border-radius:12px;color:#fff;font-weight:900;margin-bottom:24px;}
+.done-actions{display:flex;flex-direction:column;gap:10px;justify-content:center;}
+@media(min-width:640px){.done-actions{flex-direction:row;}}
+.btn-outline{padding:14px 24px;background:#fff;border:2px solid #e2e8f0;border-radius:12px;font-weight:900;font-size:14px;display:flex;align-items:center;gap:8px;justify-content:center;}
+.btn-rose{padding:14px 24px;background:#e11d48;color:#fff;border-radius:12px;font-weight:900;font-size:14px;display:flex;align-items:center;gap:8px;justify-content:center;}
+
+/* progress page */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.stat{background:#fff;border-radius:16px;border:2px solid #f1f5f9;padding:16px;text-align:center;}
+.stat .e{font-size:24px;margin-bottom:4px;}
+.stat .v{font-size:24px;font-weight:900;color:#0f172a;}
+.stat .l{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;color:#94a3b8;}
+.prog-classes{background:#fff;border-radius:16px;border:2px solid #f1f5f9;padding:16px;}
+.prog-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.prog-chip{display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:8px;font-size:10px;font-weight:900;border:1px solid;background:#f8fafc;color:#475569;border-color:#e2e8f0;}
+.prog-chip.done{background:#ecfdf5;color:#047857;border-color:#a7f3d0;}
+
+/* drawer & modal */
+.overlay{position:fixed;inset:0;z-index:50;display:flex;}
+.overlay-bg{position:absolute;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);}
+.drawer{position:relative;background:#fff;width:288px;max-width:85vw;height:100%;box-shadow:0 25px 50px rgba(0,0,0,0.25);display:flex;flex-direction:column;animation:slideIn .2s;}
+@keyframes slideIn{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+.drawer-head{padding:20px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;}
+.drawer-brand{display:flex;align-items:center;gap:10px;}
+.drawer-logo{background:#e11d48;padding:8px;border-radius:12px;color:#fff;display:flex;}
+.drawer-brand .n{font-weight:900;font-size:16px;display:block;}
+.drawer-brand .n span{color:#e11d48;}
+.drawer-brand .t{font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.1em;}
+.drawer-x{width:32px;height:32px;border-radius:12px;background:#f1f5f9;color:#64748b;display:flex;align-items:center;justify-content:center;}
+.drawer-body{flex:1;overflow-y:auto;padding:16px;}
+.drawer-label{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;color:#94a3b8;margin:16px 0 8px;padding:0 8px;}
+.drawer-label:first-child{margin-top:0;}
+.drawer-nav{width:100%;display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;font-weight:700;font-size:14px;margin-bottom:4px;color:#334155;text-align:left;transition:all .15s;}
+.drawer-nav:hover{background:#f8fafc;}
+.drawer-nav.active{background:#e11d48;color:#fff;}
+.drawer-class{width:100%;display:flex;align-items:center;justify-content:space-between;padding:8px 16px;border-radius:12px;font-weight:700;font-size:12px;margin-bottom:2px;color:#334155;text-align:left;}
+.drawer-class:hover{background:#f8fafc;}
+.drawer-class .cnt{font-size:8px;background:#f1f5f9;color:#64748b;padding:2px 6px;border-radius:9999px;font-weight:900;flex-shrink:0;margin-left:4px;}
+
+/* settings */
+.sheet{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;}
+@media(min-width:640px){.sheet{align-items:center;}}
+.sheet-bg{position:absolute;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);}
+.sheet-card{position:relative;background:#fff;width:100%;max-width:448px;border-radius:24px 24px 0 0;padding:20px 20px 32px;box-shadow:0 25px 50px rgba(0,0,0,0.25);max-height:88vh;overflow-y:auto;animation:sheetUp .2s;}
+@media(min-width:640px){.sheet-card{border-radius:24px;}}
+@keyframes sheetUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.sheet-head h2{font-size:18px;font-weight:900;}
+.sheet-label{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;color:#94a3b8;margin-bottom:10px;}
+.toggle-list{display:flex;flex-direction:column;gap:6px;margin-bottom:20px;}
+.toggle{width:100%;display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:12px;border:2px solid;transition:all .15s;}
+.toggle.on-sec{border-color:#fecdd3;background:#fff1f2;}
+.toggle.on-quiz{border-color:#a7f3d0;background:#ecfdf5;}
+.toggle.off{border-color:#e2e8f0;background:#f8fafc;opacity:0.6;}
+.toggle span{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px;}
+.toggle-dot{width:20px;height:20px;border-radius:9999px;border:2px solid;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.toggle-dot.on-sec{border-color:#e11d48;background:#e11d48;}
+.toggle-dot.on-quiz{border-color:#10b981;background:#10b981;}
+.toggle-dot.off{border-color:#cbd5e1;background:#fff;}
+.toggle-dot svg{color:#fff;}
+.sheet-done{width:100%;padding:14px;background:#e11d48;color:#fff;border-radius:16px;font-weight:900;}
+
+.coming-soon{text-align:center;padding:48px 0;color:#94a3b8;font-weight:900;}
+
+.fade{animation:fade .2s;}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+</style>
+</head>
+
+<body>
+<div id="root"></div>
+
+<script>
+const T = {
+  rose:   { g1:'#f43f5e', g2:'#db2777', light:'#fff1f2', dark:'#9f1239', border:'#fecdd3' },
+  red:    { g1:'#ef4444', g2:'#e11d48', light:'#fef2f2', dark:'#991b1b', border:'#fecaca' },
+  pink:   { g1:'#ec4899', g2:'#c026d3', light:'#fdf2f8', dark:'#9d174d', border:'#fbcfe8' },
+  orange: { g1:'#f97316', g2:'#ef4444', light:'#fff7ed', dark:'#9a3412', border:'#fed7aa' },
+  amber:  { g1:'#f59e0b', g2:'#ea580c', light:'#fffbeb', dark:'#92400e', border:'#fde68a' },
+  purple: { g1:'#a855f7', g2:'#db2777', light:'#faf5ff', dark:'#6b21a8', border:'#e9d5ff' },
+  indigo: { g1:'#6366f1', g2:'#7c3aed', light:'#eef2ff', dark:'#3730a3', border:'#c7d2fe' },
+  cyan:   { g1:'#06b6d4', g2:'#2563eb', light:'#ecfeff', dark:'#155e75', border:'#a5f3fc' },
+  teal:   { g1:'#14b8a6', g2:'#0891b2', light:'#f0fdfa', dark:'#115e59', border:'#99f6e4' },
+  emerald:{ g1:'#10b981', g2:'#0d9488', light:'#ecfdf5', dark:'#065f46', border:'#a7f3d0' },
+  sky:    { g1:'#0ea5e9', g2:'#4f46e5', light:'#f0f9ff', dark:'#075985', border:'#bae6fd' },
+  violet: { g1:'#8b5cf6', g2:'#9333ea', light:'#f5f3ff', dark:'#5b21b6', border:'#ddd6fe' },
+};
+
+const SLIDE_SECTIONS = [
+  { key:"physiology",        label:"Physiology",                icon:"🫀" },
+  { key:"pathophysiology",   label:"Pathophysiology",           icon:"🔬" },
+  { key:"actions",           label:"Mechanism of Action",       icon:"⚡" },
+  { key:"prehospital",       label:"Pre-hospital & Common Use", icon:"🚑" },
+  { key:"interactions",      label:"Interactions",              icon:"⚠️" },
+  { key:"indications",       label:"Indications",               icon:"✅" },
+  { key:"contraindications", label:"Contra-indications",        icon:"🚫" },
+  { key:"dosages",           label:"Dosages",                   icon:"💊" },
+];
+const QUIZ_TYPES = [
+  { key:"matching",         label:"Drug ↔ Condition Match", icon:"🔗" },
+  { key:"drugForCondition", label:"Drug for Condition",     icon:"💉" },
+  { key:"conditionForDrug", label:"Condition for Drug",     icon:"🏥" },
+  { key:"mcq",              label:"MCQ (4 Options)",        icon:"📋" },
+  { key:"typing",           label:"Type the Answer",        icon:"⌨️" },
+];
+
+// ─── REFERENCE HELPERS ──────────────────────────────────────────────────────
+const bnf  = (i,d) => ({id:i,author:"Joint Formulary Committee",year:2025,title:`${d}. British National Formulary`,source:"London: BMJ Group",url:"https://bnf.nice.org.uk/",accessed:"12 May 2025"});
+const nice = (i,t,n) => ({id:i,author:"National Institute for Health and Care Excellence",year:2024,title:`${t}. NICE Guideline ${n}`,source:"London: NICE",url:`https://www.nice.org.uk/guidance/${n.toLowerCase()}`,accessed:"12 May 2025"});
+const jrc  = (i) => ({id:i,author:"Joint Royal Colleges Ambulance Liaison Committee",year:2022,title:"JRCALC Clinical Practice Guidelines 2022",source:"Bridgwater: Class Professional Publishing",url:"https://jrcalcguidelines.co.uk/",accessed:"12 May 2025"});
+const esc  = (i,t) => ({id:i,author:"European Society of Cardiology",year:2023,title:t,source:"European Heart Journal",url:"https://www.escardio.org/Guidelines",accessed:"12 May 2025"});
+const rang = (i) => ({id:i,author:"Rang, H.P., Dale, M.M., Ritter, J.M. and Flower, R.J.",year:2023,title:"Rang and Dale's Pharmacology",source:"9th edn. Edinburgh: Elsevier",url:"https://www.elsevier.com",accessed:"12 May 2025"});
+const s = (content, refs) => ({ content, refs });
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CARDIOLOGY MODULE DATA — every cardiac drug-class suffix/prefix
+// ═══════════════════════════════════════════════════════════════════════════
+
+
+/* ── (data continues: all 21 modules + system definition) ── */
+
+const ALL_MODULES = {
+
+  terol: {
+    slides:{
+      physiology:s("Airway smooth muscle carries β2-adrenoceptors. When adrenaline or a β2-agonist binds, it raises cyclic AMP inside the muscle cell, relaxing it and widening the airway (bronchodilation). β2 receptors also sit on mast cells (stabilising them) and in skeletal muscle and the heart — explaining tremor and tachycardia side effects.",[bnf("t1","Beta2-adrenoceptor agonists"),rang("t2")]),
+      pathophysiology:s("In asthma and COPD the airways narrow through bronchospasm, inflammation and mucus. Bronchospasm — smooth muscle contraction — is the rapidly reversible component. β2-agonists relax this muscle, relieving breathlessness and wheeze within minutes. They do not treat the underlying inflammation, so in asthma they must be paired with an inhaled corticosteroid.",[nice("t3","Asthma: diagnosis, monitoring and chronic asthma management","NG80")]),
+      actions:s("β2-agonists stimulate β2-adrenoceptors → ↑cAMP → bronchodilation. SABAs (salbutamol, terbutaline) act in minutes, last 4–6h — reliever therapy. LABAs (salmeterol, formoterol) last ~12h — maintenance, always with an ICS in asthma. Formoterol has a fast onset so can be used in MART regimens. Salbutamol also drives potassium into cells (used in hyperkalaemia).",[bnf("t4","Salbutamol")]),
+      prehospital:s("🚑 Common meds: salbutamol (blue inhaler / nebs), salmeterol & formoterol (in combination inhalers), terbutaline.\n\n⚠️ Hazards: in acute severe asthma give salbutamol 5 mg nebulised driven by OXYGEN (JRCALC). Repeated/continuous nebs cause tremor, tachycardia and hypokalaemia — monitor. Salbutamol is also used IV/neb for hyperkalaemia.",[jrc("t5")]),
+      interactions:s("⚠️ Non-selective beta-blockers (propranolol) block β2 receptors → bronchospasm and reduced salbutamol effect — avoid in asthma.\n⚠️ Theophylline + high-dose β2-agonist = additive hypokalaemia.\n⚠️ Corticosteroids and diuretics worsen hypokalaemia.\n⚠️ Digoxin toxicity risk if hypokalaemia develops.",[bnf("t6","Beta2-agonists interactions")]),
+      indications:s("✅ Acute asthma & wheeze — SABA (salbutamol)\n✅ Asthma maintenance — LABA + ICS combination\n✅ COPD — SABA reliever; LABA maintenance (often with LAMA)\n✅ Exercise-induced bronchoconstriction\n✅ Hyperkalaemia — nebulised salbutamol as adjunct",[nice("t7","Asthma","NG80")]),
+      contraindications:s("⛔ LABA as monotherapy in asthma (without ICS) — increases asthma deaths\n\n⚠️ Caution: ischaemic heart disease and arrhythmias (tachycardia), hyperthyroidism, diabetes (can raise glucose), hypokalaemia, pregnancy (salbutamol is preferred reliever and is considered safe).",[bnf("t8","Beta2-agonists — cautions")]),
+      dosages:s("💊 Salbutamol inhaler: 100–200 mcg PRN (max usually QDS)\n💊 Salbutamol neb (acute): 2.5–5 mg, repeat/continuous in severe attack\n💊 Salmeterol: 50 mcg BD (with ICS)\n💊 Formoterol: 12 mcg BD (or in MART)\n💊 Terbutaline: 500 mcg PRN\n\n⏰ Overuse of SABA (>1 inhaler/month) signals poor control — review.",[bnf("t9","Salbutamol")]),
+    },
+    quizData:{
+      matching:[{drug:"Salbutamol",condition:"Acute asthma reliever (short-acting)"},{drug:"Salmeterol",condition:"Long-acting maintenance — always with an ICS"},{drug:"Formoterol",condition:"Fast-onset LABA used in MART regimens"},{drug:"Terbutaline",condition:"Alternative short-acting reliever"},{drug:"Salbutamol (IV/neb)",condition:"Adjunct in hyperkalaemia"}],
+      drugForCondition:[{condition:"First-line reliever for an acute asthma attack",correct:"Salbutamol",distractors:["Salmeterol","Tiotropium","Montelukast"]},{condition:"Long-acting beta-agonist that must always be combined with an ICS in asthma",correct:"Salmeterol",distractors:["Salbutamol","Ipratropium","Theophylline"]},{condition:"Fast-onset LABA suitable for a maintenance-and-reliever (MART) inhaler",correct:"Formoterol",distractors:["Salmeterol","Salbutamol","Terbutaline"]}],
+      conditionForDrug:[{drug:"Salbutamol",conditions:["Acute asthma and hyperkalaemia","Asthma maintenance alone","Long-term COPD monotherapy","Allergic rhinitis"],correct:"Acute asthma and hyperkalaemia"},{drug:"Salmeterol",conditions:["Asthma maintenance with an ICS","Acute attack rescue","Monotherapy in asthma","Hyperkalaemia"],correct:"Asthma maintenance with an ICS"}],
+      mcq:[{q:"How do β2-agonists relieve bronchospasm?",options:["Block muscarinic receptors","Raise cAMP relaxing airway smooth muscle","Reduce IgE","Inhibit leukotrienes"],correct:"Raise cAMP relaxing airway smooth muscle"},{q:"Which gas should drive a salbutamol nebuliser in acute severe asthma?",options:["Air","Oxygen","Nitrous oxide","Heliox"],correct:"Oxygen"},{q:"A LABA used alone in asthma is dangerous because it?",options:["Causes hyperkalaemia","Increases asthma deaths without an ICS","Blocks β2 receptors","Causes bradycardia"],correct:"Increases asthma deaths without an ICS"},{q:"Common side effects of high-dose salbutamol include?",options:["Bradycardia and hyperkalaemia","Tremor, tachycardia and hypokalaemia","Hypertension and constipation","Drowsiness"],correct:"Tremor, tachycardia and hypokalaemia"},{q:"Besides bronchodilation, nebulised salbutamol is used to treat?",options:["Hypokalaemia","Hyperkalaemia","Hypoglycaemia","Hypernatraemia"],correct:"Hyperkalaemia"}],
+      typing:[{scenario:"A patient in acute severe asthma needs nebulised bronchodilation. Which drug, what dose, driven by which gas?",answer:"salbutamol 5 mg oxygen"},{scenario:"A LABA in asthma must always be combined with which other inhaled drug class?",answer:"inhaled corticosteroid"},{scenario:"Reliever inhaler overuse beyond one canister a month signals what?",answer:"poor control"}],
+    }
+  },
+
+  tropium: {
+    slides:{
+      physiology:s("Parasympathetic (vagal) nerves release acetylcholine onto M3 muscarinic receptors in airway smooth muscle and glands, causing bronchoconstriction and mucus secretion. Antimuscarinics block M3 receptors, relaxing the airway and reducing secretions. This vagal tone is the main reversible component of airflow obstruction in COPD.",[bnf("tr1","Antimuscarinic bronchodilators"),rang("tr2")]),
+      pathophysiology:s("In COPD, chronic airflow limitation is driven partly by cholinergic bronchomotor tone. Blocking it produces sustained bronchodilation, which is why long-acting antimuscarinics (LAMAs) are a cornerstone of COPD therapy. In acute asthma, adding ipratropium to salbutamol gives extra bronchodilation in severe attacks.",[nice("tr3","Chronic obstructive pulmonary disease in over 16s","NG115")]),
+      actions:s("Antimuscarinics block M3 (and M1) receptors → less bronchoconstriction and mucus. SAMA — ipratropium: onset 30–60 min, lasts ~6h. LAMA — tiotropium, glycopyrronium, umeclidinium, aclidinium: once or twice daily. Minimal systemic absorption when inhaled, so few systemic effects, but dry mouth is common.",[bnf("tr4","Tiotropium")]),
+      prehospital:s("🚑 Common meds: ipratropium (Atrovent neb/inhaler), tiotropium (Spiriva — COPD maintenance), umeclidinium/glycopyrronium in combination inhalers.\n\n⚠️ Hazards: in acute severe/life-threatening asthma add ipratropium 500 mcg to the salbutamol nebuliser (JRCALC). Nebulised mist can precipitate acute angle-closure glaucoma — protect the eyes with a mouthpiece or shield.",[jrc("tr5")]),
+      interactions:s("⚠️ Other antimuscarinics (oxybutynin, amitriptyline, antihistamines) add anticholinergic load — dry mouth, urinary retention, confusion in the elderly.\n⚠️ Avoid combining a SAMA (ipratropium) and a LAMA (tiotropium) routinely — overlapping mechanism.\n⚠️ Few systemic drug interactions due to low absorption.",[bnf("tr6","Antimuscarinics interactions")]),
+      indications:s("✅ COPD maintenance — LAMA (tiotropium etc.), first-line bronchodilator\n✅ Acute severe asthma — add nebulised ipratropium to salbutamol\n✅ COPD exacerbation — ipratropium nebs\n✅ Chronic asthma — LAMA add-on in poorly controlled disease (NICE NG80)",[nice("tr7","COPD","NG115")]),
+      contraindications:s("⚠️ Caution (not absolute): angle-closure glaucoma (nebulised mist risk), bladder outflow obstruction / prostatic hyperplasia (urinary retention), recent MI/arrhythmia.\n\nHypersensitivity to atropine derivatives is a contraindication. Use a mouthpiece rather than a mask near the eyes.",[bnf("tr8","Tiotropium — cautions")]),
+      dosages:s("💊 Ipratropium inhaler: 20–40 mcg TDS–QDS\n💊 Ipratropium neb (acute): 500 mcg, 4–6 hourly\n💊 Tiotropium: 18 mcg (Handihaler) or 5 mcg (Respimat) OD\n💊 Glycopyrronium: 44 mcg OD\n💊 Umeclidinium: 55 mcg OD\n\n⏰ LAMAs are once-daily maintenance — not for acute relief.",[bnf("tr9","Tiotropium")]),
+    },
+    quizData:{
+      matching:[{drug:"Ipratropium",condition:"Short-acting antimuscarinic added in acute severe asthma"},{drug:"Tiotropium",condition:"Once-daily LAMA for COPD maintenance"},{drug:"Glycopyrronium",condition:"Once-daily LAMA in combination inhalers"},{drug:"Umeclidinium",condition:"LAMA component of triple therapy"},{drug:"Aclidinium",condition:"Twice-daily LAMA for COPD"}],
+      drugForCondition:[{condition:"Add to nebulised salbutamol in life-threatening asthma for extra bronchodilation",correct:"Ipratropium",distractors:["Tiotropium","Salmeterol","Montelukast"]},{condition:"Once-daily long-acting antimuscarinic, a cornerstone of COPD maintenance",correct:"Tiotropium",distractors:["Ipratropium","Salbutamol","Theophylline"]},{condition:"Short-acting antimuscarinic (SAMA) for acute use",correct:"Ipratropium",distractors:["Tiotropium","Umeclidinium","Glycopyrronium"]}],
+      conditionForDrug:[{drug:"Tiotropium",conditions:["COPD maintenance bronchodilation","Acute asthma rescue","Allergic rhinitis","Hyperkalaemia"],correct:"COPD maintenance bronchodilation"},{drug:"Ipratropium",conditions:["Add-on in acute severe asthma","Long-term once-daily COPD control","Anaphylaxis","Pulmonary embolism"],correct:"Add-on in acute severe asthma"}],
+      mcq:[{q:"Antimuscarinic bronchodilators work by blocking which receptor?",options:["β2-adrenoceptor","M3 muscarinic receptor","Histamine H1","Leukotriene receptor"],correct:"M3 muscarinic receptor"},{q:"In life-threatening asthma, what is added to nebulised salbutamol?",options:["Tiotropium","Ipratropium 500 mcg","Theophylline","Montelukast"],correct:"Ipratropium 500 mcg"},{q:"A risk of nebulised ipratropium near the eyes is?",options:["Cataract","Acute angle-closure glaucoma","Conjunctivitis","Dry eye only"],correct:"Acute angle-closure glaucoma"},{q:"Which is a LAMA used once daily in COPD?",options:["Ipratropium","Salbutamol","Tiotropium","Beclometasone"],correct:"Tiotropium"},{q:"A common side effect of antimuscarinics is?",options:["Dry mouth","Bradycardia","Diarrhoea","Hyperkalaemia"],correct:"Dry mouth"}],
+      typing:[{scenario:"A patient in life-threatening asthma already on salbutamol nebs — which antimuscarinic and dose do you add?",answer:"ipratropium 500"},{scenario:"Name the once-daily long-acting antimuscarinic that is a cornerstone of COPD maintenance.",answer:"tiotropium"},{scenario:"Antimuscarinics block which type of receptor in the airway?",answer:"muscarinic"}],
+    }
+  },
+/* ════════════════════════════════════════════════════════════════════
+   PulmoPharm — index.html — PART 2 of 3   (lines 352-699)
+   Append directly after PART 1. Continues the module data, the SYSTEM
+   definition, the icons, and the first render functions.
+   ════════════════════════════════════════════════════════════════ */
+  asone: {
+    slides:{
+      physiology:s("Inhaled corticosteroids (ICS) enter airway cells and bind glucocorticoid receptors, switching off genes that drive inflammation and switching on anti-inflammatory genes. They reduce eosinophils, mast cells and cytokines in the airway mucosa. Delivered topically to the lungs, they control airway inflammation with far less systemic exposure than oral steroids.",[bnf("a1","Corticosteroids (inhaled)"),rang("a2")]),
+      pathophysiology:s("Asthma is fundamentally an inflammatory disease — the airway is hyper-responsive and inflamed even between attacks. Treating only bronchospasm (with a SABA) leaves the inflammation untreated. ICS reduce airway inflammation and hyper-responsiveness, lowering exacerbations and asthma deaths — they are the foundation of asthma maintenance.",[nice("a3","Asthma","NG80")]),
+      actions:s("ICS reduce airway inflammation over days to weeks (not immediate). Agents: beclometasone, budesonide, fluticasone, ciclesonide, mometasone. Often combined with a LABA in one inhaler (e.g. budesonide/formoterol, fluticasone/salmeterol). Higher doses increase local and systemic side-effect risk. Rinse the mouth after use to prevent oral thrush.",[bnf("a4","Beclometasone")]),
+      prehospital:s("🚑 Common meds: brown/maroon 'preventer' inhalers — beclometasone (Clenil/Qvar), budesonide, fluticasone; combination inhalers (Seretide, Symbicort, Fostair).\n\n⚠️ Hazards: ICS do NOT relieve an acute attack — patients reaching for the preventer in an emergency need their SABA and escalation. Sudden withdrawal can destabilise asthma. Oral candidiasis and hoarse voice are common.",[jrc("a5")]),
+      interactions:s("⚠️ Potent CYP3A4 inhibitors (ritonavir, ketoconazole, clarithromycin) raise fluticasone/budesonide levels → systemic steroid effects, even adrenal suppression.\n⚠️ High-dose ICS add to systemic steroid load if oral steroids are also used.\n⚠️ Few acute interactions otherwise.",[bnf("a6","Corticosteroids interactions")]),
+      indications:s("✅ Asthma maintenance — first-line preventer (NICE NG80)\n✅ COPD — ICS in combination for frequent exacerbators with eosinophilia (NICE NG115)\n✅ Part of MART regimens (budesonide/formoterol)\n\nNOT for acute relief — they prevent, they don't rescue.",[nice("a7","Asthma","NG80")]),
+      contraindications:s("⚠️ Caution: active respiratory tract infection (e.g. untreated TB), because steroids suppress local immunity.\n\nHigh-dose long-term ICS risks: oral candidiasis, dysphonia, growth effects in children (monitor height), bruising, and rarely adrenal suppression. Use the lowest effective dose. Rinse mouth after each use.",[bnf("a8","Corticosteroids — cautions")]),
+      dosages:s("💊 Beclometasone (Clenil): 200–400 mcg BD (low–moderate dose)\n💊 Budesonide: 200–400 mcg BD\n💊 Fluticasone: 100–250 mcg BD\n💊 Combination e.g. budesonide/formoterol: 1–2 puffs BD ± reliever (MART)\n\n⏰ Onset is gradual — take regularly, not PRN. Rinse mouth after use.",[bnf("a9","Beclometasone")]),
+    },
+    quizData:{
+      matching:[{drug:"Beclometasone",condition:"First-line asthma preventer (brown inhaler)"},{drug:"Budesonide",condition:"ICS component of MART combination inhalers"},{drug:"Fluticasone",condition:"Potent ICS in combination inhalers"},{drug:"Ciclesonide",condition:"Pro-drug ICS, low oral deposition"},{drug:"Mometasone",condition:"Once-daily inhaled corticosteroid"}],
+      drugForCondition:[{condition:"First-line preventer therapy to control airway inflammation in asthma",correct:"Beclometasone",distractors:["Salbutamol","Ipratropium","Montelukast"]},{condition:"ICS combined with formoterol in a maintenance-and-reliever inhaler",correct:"Budesonide",distractors:["Fluticasone","Beclometasone","Mometasone"]},{condition:"Inhaled steroid whose CYP3A4 metabolism makes it risky with ritonavir",correct:"Fluticasone",distractors:["Salbutamol","Ipratropium","Theophylline"]}],
+      conditionForDrug:[{drug:"Beclometasone",conditions:["Asthma maintenance (preventer)","Acute attack rescue","Allergic rhinitis only","Hyperkalaemia"],correct:"Asthma maintenance (preventer)"},{drug:"Fluticasone",conditions:["Asthma/COPD maintenance inhaled steroid","Immediate bronchodilation","Anaphylaxis","Hypokalaemia"],correct:"Asthma/COPD maintenance inhaled steroid"}],
+      mcq:[{q:"What is the primary role of inhaled corticosteroids in asthma?",options:["Immediate bronchodilation","Reduce airway inflammation (preventer)","Block muscarinic receptors","Thin mucus"],correct:"Reduce airway inflammation (preventer)"},{q:"A common local side effect of ICS is?",options:["Oral candidiasis","Diarrhoea","Tachycardia","Hyperkalaemia"],correct:"Oral candidiasis"},{q:"Why rinse the mouth after using an ICS?",options:["Improve absorption","Prevent oral thrush and hoarseness","Reduce bitterness","Prevent tooth decay"],correct:"Prevent oral thrush and hoarseness"},{q:"ICS are dangerous to rely on in an acute attack because they?",options:["Cause bronchospasm","Do not provide immediate relief","Lower potassium","Raise heart rate"],correct:"Do not provide immediate relief"},{q:"Which drug markedly raises fluticasone levels (risk of adrenal suppression)?",options:["Paracetamol","Ritonavir","Aspirin","Metformin"],correct:"Ritonavir"}],
+      typing:[{scenario:"What is the foundation 'preventer' drug class for asthma maintenance that reduces airway inflammation?",answer:"inhaled corticosteroid"},{scenario:"After using a steroid inhaler, what should the patient do to prevent oral thrush?",answer:"rinse mouth"},{scenario:"Can an ICS be used to relieve an acute asthma attack? Yes or no?",answer:"no"}],
+    }
+  },
+
+  lukast: {
+    slides:{
+      physiology:s("Leukotrienes (especially LTC4, LTD4, LTE4) are inflammatory lipid mediators released by mast cells and eosinophils. They cause bronchoconstriction, mucus secretion, and airway oedema by acting on CysLT1 receptors. They are central to allergic and exercise-induced asthma and to aspirin-exacerbated respiratory disease.",[bnf("l1","Leukotriene receptor antagonists"),rang("l2")]),
+      pathophysiology:s("In some asthma — particularly allergic, exercise-induced, and aspirin-sensitive — the leukotriene pathway is a major driver of inflammation and bronchospasm. Blocking the CysLT1 receptor reduces these effects, giving an oral anti-inflammatory option that complements inhaled corticosteroids, useful when ICS alone is insufficient or adherence to inhalers is poor.",[nice("l3","Asthma","NG80")]),
+      actions:s("Montelukast (and zafirlukast) block the CysLT1 leukotriene receptor → less bronchoconstriction, mucus and inflammation. Oral, once daily (montelukast in the evening). Onset within a day. Particularly helpful in exercise-induced and aspirin-exacerbated asthma, and in children as an ICS-sparing add-on or alternative.",[bnf("l4","Montelukast")]),
+      prehospital:s("🚑 Common meds: montelukast (Singulair) — oral tablet/granules, often in children and allergic asthma.\n\n⚠️ Hazards: montelukast carries an MHRA warning for neuropsychiatric reactions — sleep disturbance, agitation, mood changes, and rarely suicidal thoughts. Ask about new mood/behaviour changes. It is a preventer, not a reliever — no role in the acute attack.",[jrc("l5")]),
+      interactions:s("⚠️ Enzyme inducers (rifampicin, phenytoin, carbamazepine) lower montelukast levels.\n⚠️ Zafirlukast inhibits warfarin metabolism → raised INR (montelukast far less so).\n⚠️ Generally well tolerated with few major interactions.",[bnf("l6","Leukotriene receptor antagonists interactions")]),
+      indications:s("✅ Asthma add-on therapy (with ICS) (NICE NG80)\n✅ Exercise-induced bronchoconstriction\n✅ Aspirin-exacerbated respiratory disease\n✅ Allergic rhinitis with asthma\n✅ Paediatric asthma — ICS-sparing option",[nice("l7","Asthma","NG80")]),
+      contraindications:s("⚠️ Caution: history of mental health problems — counsel about neuropsychiatric effects and review (MHRA).\n\nNot for acute asthma. Zafirlukast: caution in hepatic impairment (rare hepatotoxicity). Advise patients/parents to report any new behavioural or mood changes.",[bnf("l8","Montelukast — cautions")]),
+      dosages:s("💊 Montelukast adult: 10 mg once daily in the evening\n💊 Montelukast 6–14 yr: 5 mg chewable evening\n💊 Montelukast 6 mo–5 yr: 4 mg granules/chewable evening\n💊 Zafirlukast: 20 mg BD\n\n⏰ Evening dosing; it is preventive — take regularly.",[bnf("l9","Montelukast")]),
+    },
+    quizData:{
+      matching:[{drug:"Montelukast",condition:"Once-daily oral leukotriene antagonist for asthma add-on"},{drug:"Zafirlukast",condition:"Twice-daily leukotriene antagonist (raises INR with warfarin)"},{drug:"Montelukast (paediatric)",condition:"ICS-sparing option in childhood asthma"},{drug:"Montelukast",condition:"Exercise-induced and aspirin-sensitive asthma"},{drug:"Montelukast",condition:"Allergic rhinitis with asthma"}],
+      drugForCondition:[{condition:"Oral add-on for asthma poorly controlled on an ICS, especially exercise-induced",correct:"Montelukast",distractors:["Salbutamol","Tiotropium","Beclometasone"]},{condition:"Leukotriene antagonist that significantly raises INR in warfarin patients",correct:"Zafirlukast",distractors:["Montelukast","Salmeterol","Ipratropium"]},{condition:"ICS-sparing preventer often used in young children with asthma",correct:"Montelukast",distractors:["Theophylline","Prednisolone","Salbutamol"]}],
+      conditionForDrug:[{drug:"Montelukast",conditions:["Asthma add-on / exercise-induced asthma","Acute asthma rescue","Anaphylaxis","Hyperkalaemia"],correct:"Asthma add-on / exercise-induced asthma"},{drug:"Zafirlukast",conditions:["Asthma — caution with warfarin (raised INR)","Immediate bronchodilation","COPD monotherapy","Pulmonary embolism"],correct:"Asthma — caution with warfarin (raised INR)"}],
+      mcq:[{q:"Montelukast blocks which receptor?",options:["β2-adrenoceptor","CysLT1 leukotriene receptor","M3 muscarinic","Histamine H1"],correct:"CysLT1 leukotriene receptor"},{q:"The MHRA warning for montelukast concerns?",options:["Hepatotoxicity","Neuropsychiatric reactions","Nephrotoxicity","QT prolongation"],correct:"Neuropsychiatric reactions"},{q:"Montelukast is taken?",options:["Only when wheezy","Once daily in the evening","Four times daily","Inhaled"],correct:"Once daily in the evening"},{q:"Montelukast is particularly useful in which asthma phenotype?",options:["Aspirin-exacerbated / exercise-induced","Cardiac asthma","Brittle bone","None"],correct:"Aspirin-exacerbated / exercise-induced"},{q:"Which leukotriene antagonist notably raises warfarin INR?",options:["Montelukast","Zafirlukast","Salmeterol","Theophylline"],correct:"Zafirlukast"}],
+      typing:[{scenario:"Name the once-daily oral leukotriene receptor antagonist used as an asthma add-on, taken in the evening.",answer:"montelukast"},{scenario:"What class of side effect does the MHRA specifically warn about with montelukast?",answer:"neuropsychiatric"},{scenario:"Montelukast blocks the receptor for which inflammatory mediator?",answer:"leukotriene"}],
+    }
+  },
+
+  phylline: {
+    slides:{
+      physiology:s("Theophylline is a methylxanthine. It inhibits phosphodiesterase (raising cAMP → bronchodilation) and antagonises adenosine receptors. It also has anti-inflammatory effects and can improve diaphragm contractility and respiratory drive. Its effects span the airways, heart, CNS and kidneys, which is why toxicity is multi-system.",[bnf("ph1","Theophylline"),rang("ph2")]),
+      pathophysiology:s("In difficult asthma and COPD, when inhaled therapy is insufficient, xanthines add bronchodilation and some anti-inflammatory effect. But theophylline has a narrow therapeutic window (10–20 mg/L) — too little does nothing, too much causes arrhythmias and seizures — so it is now a later-line option requiring monitoring.",[nice("ph3","COPD","NG115")]),
+      actions:s("Theophylline (oral) and aminophylline (IV, theophylline + ethylenediamine) cause bronchodilation via PDE inhibition and adenosine antagonism. Metabolised by CYP1A2 — levels are heavily affected by smoking (induces) and many drugs. Target plasma level 10–20 mg/L. IV aminophylline is reserved for severe acute asthma not responding to standard therapy.",[bnf("ph4","Aminophylline")]),
+      prehospital:s("🚑 Common meds: modified-release theophylline (Uniphyllin, Slo-Phyllin); IV aminophylline in hospital for severe asthma.\n\n⚠️ Hazards: NARROW therapeutic index — toxicity causes vomiting, tachyarrhythmias, hypokalaemia and seizures. In a patient already on oral theophylline, do NOT give an IV aminophylline loading dose without a level — risk of fatal toxicity (JRCALC/BNF).",[jrc("ph5")]),
+      interactions:s("❌ CYP1A2 inhibitors (ciprofloxacin, clarithromycin, fluconazole) raise theophylline → toxicity.\n❌ Enzyme inducers (rifampicin, phenytoin, smoking) lower levels → loss of effect.\n⚠️ With β2-agonists, diuretics, steroids: additive hypokalaemia.\n⚠️ Stopping smoking raises levels — reduce dose.",[bnf("ph6","Theophylline interactions")]),
+      indications:s("✅ Chronic asthma — add-on when inhaled therapy insufficient (NICE NG80)\n✅ COPD — add-on bronchodilator\n✅ Severe acute asthma — IV aminophylline (specialist, with monitoring)\n\nReserved for later steps because of the narrow therapeutic window.",[nice("ph7","Asthma","NG80")]),
+      contraindications:s("⚠️ Caution: cardiac arrhythmias, hyperthyroidism, epilepsy (lowers seizure threshold), peptic ulcer, the elderly, and fever (raises levels).\n\nAlways check whether a patient already takes oral theophylline before giving IV aminophylline. Monitor plasma levels, especially when interacting drugs start/stop or smoking status changes.",[bnf("ph8","Theophylline — cautions")]),
+      dosages:s("💊 MR theophylline: ~200–400 mg BD, titrated to plasma level 10–20 mg/L\n💊 IV aminophylline loading: 5 mg/kg over 20 min — OMIT if already on oral theophylline\n💊 Maintenance infusion: ~0.5 mg/kg/hour, adjusted to levels\n\n📋 Check level 4–6 h after IV start; recheck if drugs/smoking change.",[bnf("ph9","Aminophylline")]),
+    },
+    quizData:{
+      matching:[{drug:"Theophylline (oral MR)",condition:"Add-on bronchodilator with narrow therapeutic window"},{drug:"Aminophylline (IV)",condition:"Severe acute asthma not responding to standard therapy"},{drug:"Theophylline",condition:"Levels raised by ciprofloxacin (CYP1A2 inhibitor)"},{drug:"Theophylline",condition:"Levels fall when patient smokes"},{drug:"Aminophylline",condition:"Omit loading dose if already on oral theophylline"}],
+      drugForCondition:[{condition:"IV xanthine for severe acute asthma unresponsive to nebulisers (specialist, monitored)",correct:"Aminophylline",distractors:["Salbutamol","Montelukast","Ipratropium"]},{condition:"Oral add-on bronchodilator requiring plasma level monitoring (10–20 mg/L)",correct:"Theophylline",distractors:["Beclometasone","Salmeterol","Tiotropium"]},{condition:"Drug whose levels rise dangerously when ciprofloxacin is co-prescribed",correct:"Theophylline",distractors:["Salbutamol","Montelukast","Ipratropium"]}],
+      conditionForDrug:[{drug:"Theophylline",conditions:["Add-on bronchodilation needing level monitoring","Acute reliever of choice","Anaphylaxis","Allergic rhinitis"],correct:"Add-on bronchodilation needing level monitoring"},{drug:"Aminophylline",conditions:["Severe acute asthma (IV, monitored)","First-line asthma preventer","Maintenance COPD inhaler","Hyperkalaemia"],correct:"Severe acute asthma (IV, monitored)"}],
+      mcq:[{q:"Theophylline's therapeutic plasma range is approximately?",options:["1–5 mg/L","10–20 mg/L","40–60 mg/L","100–200 mg/L"],correct:"10–20 mg/L"},{q:"Which antibiotic dangerously raises theophylline levels?",options:["Amoxicillin","Ciprofloxacin","Nitrofurantoin","Trimethoprim"],correct:"Ciprofloxacin"},{q:"Theophylline toxicity can cause?",options:["Bradycardia and hyperkalaemia","Tachyarrhythmias, hypokalaemia and seizures","Constipation only","Drowsiness only"],correct:"Tachyarrhythmias, hypokalaemia and seizures"},{q:"Before giving IV aminophylline you must check the patient is not?",options:["Asthmatic","Already on oral theophylline","Hypertensive","Diabetic"],correct:"Already on oral theophylline"},{q:"Stopping smoking affects theophylline by?",options:["Lowering levels","Raising levels (reduce dose)","No effect","Causing allergy"],correct:"Raising levels (reduce dose)"}],
+      typing:[{scenario:"A patient on regular oral theophylline arrives with severe asthma. What must you NOT give without a level (the IV xanthine loading dose)?",answer:"aminophylline"},{scenario:"State the upper limit of theophylline's therapeutic plasma range in mg/L.",answer:"20"},{scenario:"Which common antibiotic raises theophylline to toxic levels?",answer:"ciprofloxacin"}],
+    }
+  },
+
+  mab: {
+    slides:{
+      physiology:s("Severe allergic and eosinophilic asthma is driven by specific immune pathways: IgE antibodies (allergic), and the cytokines IL-5 and IL-4/IL-13 (eosinophilic/Type 2). Monoclonal antibodies ('-mab') are engineered proteins that bind and neutralise a single target in these pathways, switching off a specific arm of the inflammatory cascade.",[bnf("m1","Monoclonal antibodies for asthma"),rang("m2")]),
+      pathophysiology:s("A subgroup of asthma is severe and uncontrolled despite high-dose ICS/LABA, often with high IgE or blood eosinophils and frequent steroid-requiring exacerbations. Biologics target the exact driver — IgE or IL-5 or IL-4/13 — reducing exacerbations and oral steroid burden in carefully selected patients under specialist care.",[nice("m3","Severe asthma biologics","TA")]),
+      actions:s("Omalizumab binds free IgE (allergic asthma). Mepolizumab and benralizumab target IL-5/IL-5 receptor (eosinophilic asthma). Dupilumab blocks IL-4/IL-13 signalling. Given by subcutaneous injection every few weeks. They reduce severe exacerbations and can allow oral steroid reduction. Initiated only by specialist severe-asthma services.",[bnf("m4","Omalizumab")]),
+      prehospital:s("🚑 Common meds: omalizumab (Xolair), mepolizumab (Nucala), benralizumab (Fasenra), dupilumab (Dupixent) — usually self-injected at home or given in clinic.\n\n⚠️ Hazards: anaphylaxis can occur with omalizumab (have adrenaline available; usually observed after early doses). These are add-on preventives — they do NOT treat an acute attack, which still needs standard emergency asthma care.",[jrc("m5")]),
+      interactions:s("⚠️ Few classical pharmacokinetic interactions (they are proteins, not CYP-metabolised).\n⚠️ Live vaccines: caution if immunomodulation is significant.\n⚠️ Do not stop background ICS/LABA abruptly when a biologic starts.\n⚠️ Main concern is hypersensitivity rather than drug–drug interactions.",[bnf("m6","Monoclonal antibodies — cautions")]),
+      indications:s("✅ Severe allergic asthma with raised IgE — omalizumab\n✅ Severe eosinophilic asthma — mepolizumab, benralizumab\n✅ Severe type 2 asthma / oral-steroid-dependent — dupilumab\n✅ Goal: cut exacerbations and reduce maintenance oral steroids (specialist-initiated)",[nice("m7","Severe asthma","TA")]),
+      contraindications:s("⚠️ Caution: known hypersensitivity to the agent; observe for anaphylaxis after omalizumab dosing.\n\nNot for acute asthma. Pre-existing parasitic (helminth) infection should be treated/monitored (eosinophil-targeting biologics may affect host defence). Initiated and monitored only within specialist severe-asthma pathways.",[bnf("m8","Omalizumab — cautions")]),
+      dosages:s("💊 Omalizumab: SC every 2–4 weeks, dose by weight and IgE level\n💊 Mepolizumab: 100 mg SC every 4 weeks\n💊 Benralizumab: 30 mg SC every 4 weeks ×3 then every 8 weeks\n💊 Dupilumab: SC every 2 weeks after a loading dose\n\n📋 Specialist-initiated; response reviewed at ~12 months.",[bnf("m9","Mepolizumab")]),
+    },
+    quizData:{
+      matching:[{drug:"Omalizumab",condition:"Severe allergic asthma — binds IgE"},{drug:"Mepolizumab",condition:"Severe eosinophilic asthma — anti–IL-5"},{drug:"Benralizumab",condition:"Eosinophilic asthma — anti–IL-5 receptor"},{drug:"Dupilumab",condition:"Type 2 asthma — blocks IL-4/IL-13"},{drug:"Omalizumab",condition:"Biologic carrying an anaphylaxis risk after dosing"}],
+      drugForCondition:[{condition:"Severe asthma with high IgE and clear allergic trigger",correct:"Omalizumab",distractors:["Mepolizumab","Salbutamol","Theophylline"]},{condition:"Severe asthma with persistently high blood eosinophils (anti–IL-5)",correct:"Mepolizumab",distractors:["Omalizumab","Ipratropium","Montelukast"]},{condition:"Biologic blocking IL-4/IL-13 signalling in type 2 asthma",correct:"Dupilumab",distractors:["Benralizumab","Omalizumab","Salmeterol"]}],
+      conditionForDrug:[{drug:"Omalizumab",conditions:["Severe allergic asthma (anti-IgE)","Acute asthma rescue","Mild intermittent asthma","Hyperkalaemia"],correct:"Severe allergic asthma (anti-IgE)"},{drug:"Mepolizumab",conditions:["Severe eosinophilic asthma (anti–IL-5)","First-line preventer","Acute bronchodilation","COPD reliever"],correct:"Severe eosinophilic asthma (anti–IL-5)"}],
+      mcq:[{q:"Omalizumab works by binding which molecule?",options:["IL-5","IgE","Histamine","Leukotriene"],correct:"IgE"},{q:"Mepolizumab and benralizumab target which pathway?",options:["IgE","IL-5 / eosinophils","Muscarinic","Adenosine"],correct:"IL-5 / eosinophils"},{q:"A serious acute risk with omalizumab dosing is?",options:["Hyperkalaemia","Anaphylaxis","Bradycardia","Constipation"],correct:"Anaphylaxis"},{q:"Asthma biologics are best described as?",options:["Acute relievers","Specialist add-on preventers for severe asthma","First-line therapy for all asthma","Antibiotics"],correct:"Specialist add-on preventers for severe asthma"},{q:"Dupilumab blocks signalling of which cytokines?",options:["IL-4 and IL-13","IgE and IL-5","TNF-α","Histamine"],correct:"IL-4 and IL-13"}],
+      typing:[{scenario:"Name the anti-IgE monoclonal antibody used in severe allergic asthma.",answer:"omalizumab"},{scenario:"Severe eosinophilic asthma biologics target which interleukin?",answer:"IL-5"},{scenario:"What serious hypersensitivity reaction must be anticipated after omalizumab injection?",answer:"anaphylaxis"}],
+    }
+  },
+
+  carbocisteine: {
+    slides:{
+      physiology:s("Mucus protects and clears the airways, but when it becomes thick and tenacious it obstructs airflow and harbours infection. Mucolytics reduce mucus viscosity. Carbocisteine alters the chemical structure of mucus glycoproteins, making secretions thinner and easier to cough up; the cilia and cough can then clear them more effectively.",[bnf("mc1","Carbocisteine"),rang("mc2")]),
+      pathophysiology:s("In COPD and chronic bronchitis, mucus hypersecretion and impaired clearance cause a productive cough and recurrent infective exacerbations. Thinning the mucus aids clearance and may modestly reduce exacerbation frequency in patients with a chronic productive cough, improving symptoms when added to inhaled therapy.",[nice("mc3","COPD","NG115")]),
+      actions:s("Carbocisteine reduces mucus viscosity by altering sialomucin/fucomucin balance in airway secretions. Acetylcysteine breaks disulphide bonds in mucus (and is the antidote in paracetamol overdose). Mucolytics are oral, used regularly; benefit is reviewed after ~4 weeks and continued only if symptoms improve.",[bnf("mc4","Carbocisteine")]),
+      prehospital:s("🚑 Common meds: carbocisteine (Mucodyne), acetylcysteine, erdosteine — oral mucolytics in COPD/chronic bronchitis and bronchiectasis.\n\n⚠️ Hazards: generally very safe. Caution with active peptic ulcer (rare GI bleeding reports — mucolytics may disrupt the gastric mucus barrier). They treat chronic productive cough, not the acute breathless emergency.",[jrc("mc5")]),
+      interactions:s("⚠️ Few significant drug interactions.\n⚠️ Caution combining with antitussives (cough suppressants) — suppressing the cough while loosening mucus can cause secretions to pool.\n⚠️ Carbocisteine: avoid in active peptic ulceration.",[bnf("mc6","Carbocisteine interactions")]),
+      indications:s("✅ COPD / chronic bronchitis with chronic productive cough\n✅ Bronchiectasis — aid sputum clearance\n✅ Conditions with thick, tenacious mucus\n\nReview after ~4 weeks; continue only if there is symptomatic benefit (NICE NG115).",[nice("mc7","COPD","NG115")]),
+      contraindications:s("⛔ Active peptic ulceration (carbocisteine)\n\n⚠️ Caution: history of peptic ulcer disease, the elderly. Mucolytics are an adjunct — they do not replace bronchodilators or steroids. Stop if no symptomatic benefit after a trial period.",[bnf("mc8","Carbocisteine — cautions")]),
+      dosages:s("💊 Carbocisteine: 750 mg TDS initially, reducing to 750 mg BD as the cough improves\n💊 Acetylcysteine (oral mucolytic): 600 mg OD\n💊 Erdosteine: 300 mg BD\n\n📋 Review benefit at ~4 weeks; continue only if cough/sputum improves.",[bnf("mc9","Carbocisteine")]),
+    },
+    quizData:{
+      matching:[{drug:"Carbocisteine",condition:"Oral mucolytic for chronic productive cough in COPD"},{drug:"Acetylcysteine",condition:"Mucolytic — also the paracetamol-overdose antidote"},{drug:"Erdosteine",condition:"Mucolytic reducing COPD exacerbations"},{drug:"Carbocisteine",condition:"Avoid in active peptic ulceration"},{drug:"Carbocisteine",condition:"Reviewed after 4 weeks; continue only if effective"}],
+      drugForCondition:[{condition:"COPD patient with thick, hard-to-clear sputum — oral mucolytic",correct:"Carbocisteine",distractors:["Salbutamol","Montelukast","Tiotropium"]},{condition:"Mucolytic that is also used IV as the antidote in paracetamol overdose",correct:"Acetylcysteine",distractors:["Carbocisteine","Erdosteine","Theophylline"]},{condition:"Adjunct to thin secretions in bronchiectasis",correct:"Carbocisteine",distractors:["Ipratropium","Beclometasone","Salmeterol"]}],
+      conditionForDrug:[{drug:"Carbocisteine",conditions:["Chronic productive cough (mucolytic)","Acute bronchodilation","Asthma preventer","Hyperkalaemia"],correct:"Chronic productive cough (mucolytic)"},{drug:"Acetylcysteine",conditions:["Mucolytic and paracetamol antidote","Bronchodilator","Asthma biologic","Antitussive"],correct:"Mucolytic and paracetamol antidote"}],
+      mcq:[{q:"What do mucolytics like carbocisteine do?",options:["Dilate airways","Reduce mucus viscosity for easier clearance","Suppress cough","Reduce IgE"],correct:"Reduce mucus viscosity for easier clearance"},{q:"Carbocisteine should be avoided in?",options:["Hypertension","Active peptic ulceration","Asthma","Diabetes"],correct:"Active peptic ulceration"},{q:"Which mucolytic is also the antidote for paracetamol overdose?",options:["Carbocisteine","Acetylcysteine","Erdosteine","Theophylline"],correct:"Acetylcysteine"},{q:"When is mucolytic benefit reviewed?",options:["After 1 day","After ~4 weeks","After 1 year","Never"],correct:"After ~4 weeks"},{q:"Mucolytics are mainly used in?",options:["Acute anaphylaxis","COPD with chronic productive cough","Pneumothorax","Pulmonary embolism"],correct:"COPD with chronic productive cough"}],
+      typing:[{scenario:"Name the common oral mucolytic (brand Mucodyne) used for chronic productive cough in COPD.",answer:"carbocisteine"},{scenario:"Which mucolytic doubles as the IV antidote in paracetamol poisoning?",answer:"acetylcysteine"},{scenario:"Mucolytics reduce what physical property of mucus?",answer:"viscosity"}],
+    }
+  },
+
+  fenadine: {
+    slides:{
+      physiology:s("Histamine, released from mast cells during allergic reactions, acts on H1 receptors to cause itching, sneezing, runny nose, watery eyes and bronchial irritation, and on blood vessels to cause wheals and flushing. Antihistamines block H1 receptors, preventing histamine from producing these allergic symptoms.",[bnf("f1","Antihistamines"),rang("f2")]),
+      pathophysiology:s("Allergic rhinitis and allergic conjunctivitis frequently coexist with asthma ('one airway, one disease') and can worsen asthma control. Blocking H1 receptors relieves nasal and ocular allergy symptoms. Non-sedating second-generation agents are preferred because first-generation drugs cross into the brain and cause drowsiness.",[nice("f3","Allergic rhinitis","CKS")]),
+      actions:s("Second-generation antihistamines (cetirizine, loratadine, fexofenadine) block peripheral H1 receptors with little CNS penetration → minimal sedation. First-generation agents (chlorphenamine, promethazine) are sedating but useful where a sedative or anti-emetic effect helps, and chlorphenamine is used IV in anaphylaxis as an adjunct.",[bnf("f4","Cetirizine")]),
+      prehospital:s("🚑 Common meds: cetirizine, loratadine, fexofenadine (non-sedating); chlorphenamine (Piriton, sedating) used in allergic reactions.\n\n⚠️ Hazards: in ANAPHYLAXIS, antihistamines are only an ADJUNCT — the life-saving drug is IM adrenaline (JRCALC). Do not delay adrenaline to give an antihistamine. First-generation agents cause sedation and anticholinergic effects.",[jrc("f5")]),
+      interactions:s("⚠️ Sedating antihistamines + alcohol/opioids/benzodiazepines = additive CNS depression.\n⚠️ First-generation agents + other anticholinergics = dry mouth, retention, confusion.\n⚠️ Some antihistamines can prolong QT at high dose — caution with other QT-prolonging drugs.",[bnf("f6","Antihistamines interactions")]),
+      indications:s("✅ Allergic rhinitis and conjunctivitis\n✅ Urticaria and pruritus\n✅ Adjunct in allergic reactions / anaphylaxis (after adrenaline)\n✅ Sedating agents: short-term sleep aid, nausea (promethazine)",[nice("f7","Allergic rhinitis","CKS")]),
+      contraindications:s("⚠️ Caution: sedating antihistamines in the elderly (falls, confusion, anticholinergic load), prostatic enlargement, glaucoma, and when driving/operating machinery.\n\nRemember: antihistamines are NOT a substitute for adrenaline in anaphylaxis. Avoid sedating agents where alertness is essential.",[bnf("f8","Antihistamines — cautions")]),
+      dosages:s("💊 Cetirizine: 10 mg OD\n💊 Loratadine: 10 mg OD\n💊 Fexofenadine: 120–180 mg OD\n💊 Chlorphenamine: 4 mg every 4–6 h (oral); 10 mg IM/IV (allergic reactions, adjunct)\n\n⏰ Prefer non-sedating agents for daytime allergy control.",[bnf("f9","Cetirizine")]),
+    },
+    quizData:{
+      matching:[{drug:"Cetirizine",condition:"Non-sedating daily antihistamine for allergic rhinitis"},{drug:"Loratadine",condition:"Non-sedating once-daily antihistamine"},{drug:"Fexofenadine",condition:"Non-sedating antihistamine, higher dose for urticaria"},{drug:"Chlorphenamine",condition:"Sedating antihistamine, adjunct in allergic reactions"},{drug:"Promethazine",condition:"Sedating antihistamine with anti-emetic use"}],
+      drugForCondition:[{condition:"Daytime allergic rhinitis control without drowsiness",correct:"Cetirizine",distractors:["Chlorphenamine","Promethazine","Salbutamol"]},{condition:"Adjunct (after adrenaline) in an allergic reaction, available IM/IV",correct:"Chlorphenamine",distractors:["Loratadine","Fexofenadine","Montelukast"]},{condition:"Non-sedating antihistamine often used at higher dose for chronic urticaria",correct:"Fexofenadine",distractors:["Chlorphenamine","Promethazine","Theophylline"]}],
+      conditionForDrug:[{drug:"Cetirizine",conditions:["Allergic rhinitis (non-sedating)","First-line in anaphylaxis","Acute asthma reliever","COPD maintenance"],correct:"Allergic rhinitis (non-sedating)"},{drug:"Chlorphenamine",conditions:["Adjunct in allergic reactions (sedating)","Definitive anaphylaxis treatment","Bronchodilation","Mucolysis"],correct:"Adjunct in allergic reactions (sedating)"}],
+      mcq:[{q:"Antihistamines for allergy block which receptor?",options:["H2","H1","β2","M3"],correct:"H1"},{q:"In anaphylaxis, antihistamines are?",options:["The definitive treatment","Only an adjunct after adrenaline","Contraindicated","First-line before adrenaline"],correct:"Only an adjunct after adrenaline"},{q:"Which is a NON-sedating antihistamine?",options:["Chlorphenamine","Promethazine","Cetirizine","Hydroxyzine"],correct:"Cetirizine"},{q:"A drawback of first-generation antihistamines is?",options:["Sedation and anticholinergic effects","Hyperkalaemia","Bronchospasm","Hypertension"],correct:"Sedation and anticholinergic effects"},{q:"Which antihistamine is given IM/IV as an allergy adjunct?",options:["Loratadine","Fexofenadine","Chlorphenamine","Cetirizine"],correct:"Chlorphenamine"}],
+      typing:[{scenario:"In anaphylaxis, what is the life-saving first-line drug that antihistamines must never delay?",answer:"adrenaline"},{scenario:"Name a common non-sedating once-daily antihistamine for hay fever.",answer:"cetirizine"},{scenario:"Allergic-symptom antihistamines block which histamine receptor subtype?",answer:"H1"}],
+    }
+  },
+
+  tussive: {
+    slides:{
+      physiology:s("Coughing is a protective reflex coordinated by the cough centre in the medulla, triggered by airway irritant receptors. Opioid antitussives (codeine, pholcodine) act centrally to raise the cough threshold, suppressing a dry, non-productive cough. Because they are opioids, they share opioid effects: constipation, sedation and, in excess, respiratory depression.",[bnf("tu1","Cough suppressants"),rang("tu2")]),
+      pathophysiology:s("A dry, persistent cough with no useful secretions can be exhausting and disrupt sleep. Centrally-acting antitussives dampen the reflex. But in a PRODUCTIVE cough, suppressing it can cause mucus to pool and worsen infection — so antitussives are reserved for dry cough and avoided when clearing secretions matters.",[nice("tu3","Cough","CKS")]),
+      actions:s("Codeine and pholcodine act on central opioid receptors to suppress the cough reflex. Codeine is a pro-drug activated by CYP2D6 to morphine — ultra-rapid metabolisers get excessive morphine (dangerous in children). Dextromethorphan is a non-opioid central antitussive. Simple linctus offers a demulcent (soothing) effect with minimal risk.",[bnf("tu4","Codeine")]),
+      prehospital:s("🚑 Common meds: codeine linctus, pholcodine, dextromethorphan; combination cough preparations.\n\n⚠️ Hazards: opioid antitussives cause respiratory depression in overdose — reversed by NALOXONE. Codeine is contraindicated in children under 12 and in breastfeeding (CYP2D6 ultra-rapid metabolisers → morphine toxicity in the infant). Avoid in productive cough.",[jrc("tu5")]),
+      interactions:s("⚠️ Other CNS depressants (alcohol, benzodiazepines, opioids) = additive sedation and respiratory depression.\n⚠️ MAOIs + dextromethorphan = serotonin syndrome risk.\n⚠️ CYP2D6 inhibitors alter codeine activation.\n⚠️ Antitussive + mucolytic together can cause secretions to pool.",[bnf("tu6","Cough suppressants interactions")]),
+      indications:s("✅ Dry, non-productive cough that is distressing\n✅ Short-term symptomatic relief\n\nNOT for productive (chesty) cough, and NOT for children under 12 (codeine). Treat the underlying cause where possible (NICE CKS).",[nice("tu7","Cough","CKS")]),
+      contraindications:s("⛔ Children under 12 (codeine) — risk of fatal respiratory depression\n⛔ Breastfeeding (codeine) — morphine passes to infant\n⛔ Respiratory depression / acute asthma attack\n⛔ Productive cough where clearance is needed\n\n⚠️ Caution: opioid dependence risk, elderly, hepatic impairment.",[bnf("tu8","Codeine — contraindications")]),
+      dosages:s("💊 Codeine linctus: 15–30 mg up to QDS (adults)\n💊 Pholcodine: 5–10 mg TDS–QDS\n💊 Dextromethorphan: per product, adults\n💊 Simple linctus: 5 mL as needed (demulcent, safest)\n\n⏰ Short-term use only; avoid in productive cough and under-12s.",[bnf("tu9","Codeine")]),
+    },
+    quizData:{
+      matching:[{drug:"Codeine",condition:"Opioid antitussive (CYP2D6 pro-drug) for dry cough"},{drug:"Pholcodine",condition:"Opioid-type central cough suppressant"},{drug:"Dextromethorphan",condition:"Non-opioid central antitussive"},{drug:"Simple linctus",condition:"Demulcent soothing cough remedy, very safe"},{drug:"Naloxone",condition:"Reverses respiratory depression from antitussive opioid overdose"}],
+      drugForCondition:[{condition:"Distressing DRY cough in an adult — central suppressant",correct:"Codeine",distractors:["Carbocisteine","Salbutamol","Ipratropium"]},{condition:"Drug used to reverse opioid antitussive overdose with respiratory depression",correct:"Naloxone",distractors:["Flumazenil","Adrenaline","Atropine"]},{condition:"Soothing demulcent option with minimal risk for a tickly cough",correct:"Simple linctus",distractors:["Codeine","Pholcodine","Dextromethorphan"]}],
+      conditionForDrug:[{drug:"Codeine",conditions:["Dry distressing cough (adult)","Productive cough in a child","Acute asthma","Bronchiectasis sputum clearance"],correct:"Dry distressing cough (adult)"},{drug:"Naloxone",conditions:["Opioid antitussive overdose","Benzodiazepine overdose","Anaphylaxis","Hyperkalaemia"],correct:"Opioid antitussive overdose"}],
+      mcq:[{q:"Opioid antitussives suppress cough by acting where?",options:["Airway smooth muscle","Central cough centre","Mast cells","Alveoli"],correct:"Central cough centre"},{q:"Codeine is contraindicated in which group?",options:["Adults over 65","Children under 12","Hypertensives","Diabetics"],correct:"Children under 12"},{q:"Antitussive opioid overdose is reversed by?",options:["Flumazenil","Naloxone","Atropine","Adrenaline"],correct:"Naloxone"},{q:"Antitussives should be avoided in which type of cough?",options:["Dry cough","Productive (chesty) cough","Nocturnal dry cough","Tickly cough"],correct:"Productive (chesty) cough"},{q:"Codeine is activated to morphine by which enzyme?",options:["CYP3A4","CYP2D6","CYP1A2","CYP2C9"],correct:"CYP2D6"}],
+      typing:[{scenario:"Which drug reverses respiratory depression caused by an opioid antitussive overdose?",answer:"naloxone"},{scenario:"Codeine is contraindicated as a cough suppressant in children under what age?",answer:"12"},{scenario:"Antitussives should be avoided in which type of cough (one word)?",answer:"productive"}],
+    }
+  },
+
+  vir: {
+    slides:{
+      physiology:s("Influenza virus infects respiratory epithelial cells and replicates. It relies on the surface enzyme neuraminidase to release newly-made virus particles from infected cells so they can spread. Neuraminidase inhibitors block this enzyme, keeping new virus stuck to the cell and limiting spread through the airway.",[bnf("v1","Oseltamivir"),rang("v2")]),
+      pathophysiology:s("Influenza causes fever, myalgia and cough, and can progress to viral or secondary bacterial pneumonia, or trigger asthma/COPD exacerbations. In at-risk groups (chronic lung disease, immunosuppressed, elderly, pregnant) antivirals started early reduce complications. They work best within 48 hours of symptom onset, when viral replication is highest.",[nice("v3","Influenza — antiviral treatment","TA158")]),
+      actions:s("Oseltamivir (oral) and zanamivir (inhaled) inhibit viral neuraminidase, reducing influenza A and B replication. They shorten illness by around a day and reduce complications in at-risk patients if started within 48 hours. Used for treatment and, in outbreaks, post-exposure prophylaxis in vulnerable people.",[bnf("v4","Oseltamivir")]),
+      prehospital:s("🚑 Common meds: oseltamivir (Tamiflu) capsules; zanamivir (Relenza) inhaled.\n\n⚠️ Hazards: prescribed in influenza season per UKHSA/PHE alerts, mainly for at-risk patients. Inhaled zanamivir can cause bronchospasm — avoid in asthma/COPD or have a bronchodilator ready. They reduce but do not abolish complications; severe influenza still needs supportive care.",[jrc("v5")]),
+      interactions:s("⚠️ Oseltamivir has few significant interactions (renally excreted).\n⚠️ Live attenuated influenza vaccine (nasal): antivirals can blunt its effect — separate appropriately.\n⚠️ Inhaled zanamivir may worsen bronchospasm in reactive airways.",[bnf("v6","Oseltamivir interactions")]),
+      indications:s("✅ Influenza treatment in at-risk patients (start within 48 h)\n✅ Post-exposure prophylaxis in at-risk contacts during outbreaks\n✅ Severe influenza requiring admission\n\nUse guided by national surveillance that influenza is circulating (NICE TA158).",[nice("v7","Influenza","TA158")]),
+      contraindications:s("⚠️ Caution: renal impairment (reduce oseltamivir dose); inhaled zanamivir in asthma/COPD (bronchospasm risk).\n\nNot a substitute for annual vaccination. Benefit is greatest when started early; of limited value if begun late in uncomplicated illness in low-risk patients.",[bnf("v8","Oseltamivir — cautions")]),
+      dosages:s("💊 Oseltamivir (treatment): 75 mg BD for 5 days\n💊 Oseltamivir (prophylaxis): 75 mg OD for 10 days\n💊 Reduce dose in renal impairment\n💊 Zanamivir: 10 mg inhaled BD for 5 days\n\n⏰ Start within 48 hours of symptom onset for best effect.",[bnf("v9","Oseltamivir")]),
+    },
+    quizData:{
+      matching:[{drug:"Oseltamivir",condition:"Oral neuraminidase inhibitor for influenza"},{drug:"Zanamivir",condition:"Inhaled antiviral — bronchospasm risk in asthma"},{drug:"Oseltamivir",condition:"Post-exposure prophylaxis in at-risk contacts"},{drug:"Oseltamivir",condition:"Most effective within 48 hours of onset"},{drug:"Oseltamivir",condition:"Dose reduced in renal impairment"}],
+      drugForCondition:[{condition:"At-risk patient with influenza presenting within 48 hours — oral antiviral",correct:"Oseltamivir",distractors:["Amoxicillin","Salbutamol","Montelukast"]},{condition:"Inhaled neuraminidase inhibitor (avoid in reactive airways)",correct:"Zanamivir",distractors:["Oseltamivir","Carbocisteine","Theophylline"]},{condition:"Antiviral for post-exposure prophylaxis during an influenza outbreak in a care home",correct:"Oseltamivir",distractors:["Codeine","Ipratropium","Beclometasone"]}],
+      conditionForDrug:[{drug:"Oseltamivir",conditions:["Influenza in at-risk patient within 48h","Bacterial pneumonia","Acute asthma","Hyperkalaemia"],correct:"Influenza in at-risk patient within 48h"},{drug:"Zanamivir",conditions:["Inhaled influenza antiviral (caution in asthma)","First-line asthma preventer","COPD bronchodilator","Mucolytic"],correct:"Inhaled influenza antiviral (caution in asthma)"}],
+      mcq:[{q:"Neuraminidase inhibitors stop influenza by?",options:["Blocking viral entry","Preventing release/spread of new virus","Boosting antibodies","Killing bacteria"],correct:"Preventing release/spread of new virus"},{q:"Antivirals for influenza work best when started within?",options:["48 hours of onset","1 week","2 weeks","Any time"],correct:"48 hours of onset"},{q:"Inhaled zanamivir should be used cautiously in?",options:["Diabetes","Asthma/COPD (bronchospasm)","Hypertension","Gout"],correct:"Asthma/COPD (bronchospasm)"},{q:"Oseltamivir dosing must be adjusted in?",options:["Hepatic impairment","Renal impairment","Anaemia","Hyperthyroidism"],correct:"Renal impairment"},{q:"Standard oseltamivir TREATMENT dose is?",options:["75 mg OD","75 mg BD for 5 days","150 mg BD","30 mg OD"],correct:"75 mg BD for 5 days"}],
+      typing:[{scenario:"Name the common oral neuraminidase inhibitor (brand Tamiflu) for influenza.",answer:"oseltamivir"},{scenario:"Antivirals for flu should ideally start within how many hours of symptom onset?",answer:"48"},{scenario:"Which inhaled antiviral can trigger bronchospasm in asthma?",answer:"zanamivir"}],
+    }
+  },
+
+  roflumilast: {
+    slides:{
+      physiology:s("Phosphodiesterase-4 (PDE4) breaks down cyclic AMP inside inflammatory cells in the lung. Cyclic AMP normally restrains inflammation, so when PDE4 destroys it, inflammation proceeds. Roflumilast inhibits PDE4, raising cAMP in these cells and dampening the chronic neutrophilic inflammation characteristic of severe COPD.",[bnf("r1","Roflumilast"),rang("r2")]),
+      pathophysiology:s("Severe COPD with chronic bronchitis and frequent exacerbations is driven by persistent airway inflammation that bronchodilators alone don't address. Roflumilast reduces exacerbation frequency in this specific group — severe COPD, chronic bronchitis (productive cough), and a history of frequent exacerbations despite triple inhaled therapy.",[nice("r3","Roflumilast for treating COPD","TA461")]),
+      actions:s("Roflumilast is an oral, once-daily selective PDE4 inhibitor. It is anti-inflammatory rather than bronchodilator, so it is an add-on to inhaled therapy, not a reliever. Notable side effects are weight loss, nausea, diarrhoea and mood disturbance, which limit tolerability and require monitoring.",[bnf("r4","Roflumilast")]),
+      prehospital:s("🚑 Common meds: roflumilast (Daxas) — oral tablet, specialist add-on in severe COPD.\n\n⚠️ Hazards: causes weight loss (monitor weight), GI upset, and psychiatric effects including mood change, anxiety and rarely suicidal thoughts — ask about mental health. It is preventive, with no role in acute exacerbation management beyond standard COPD care.",[jrc("r5")]),
+      interactions:s("⚠️ Strong CYP inducers (rifampicin) reduce roflumilast effect — avoid.\n⚠️ CYP1A2/3A4 inhibitors (fluvoxamine, cimetidine, oral contraceptives with ethinylestradiol) raise levels.\n⚠️ Caution with other drugs causing weight loss or mood disturbance.",[bnf("r6","Roflumilast interactions")]),
+      indications:s("✅ Severe COPD (FEV1 <50% predicted) with chronic bronchitis AND frequent exacerbations, as add-on to bronchodilators (NICE TA461)\n\nA targeted add-on for a defined exacerbator phenotype — not for general COPD or asthma.",[nice("r7","Roflumilast for COPD","TA461")]),
+      contraindications:s("⛔ Moderate-to-severe hepatic impairment\n⛔ Underweight patients (further weight loss)\n\n⚠️ Caution: history of depression or suicidal ideation (psychiatric effects), severe immunological disease, and significant unintentional weight loss. Monitor weight and mood; stop if intolerable.",[bnf("r8","Roflumilast — contraindications")]),
+      dosages:s("💊 Roflumilast: 500 micrograms once daily, oral\n💊 May start at 250 micrograms OD for 28 days to improve tolerability\n\n📋 Monitor weight and mental state. Add-on to inhaled therapy in the right phenotype only.",[bnf("r9","Roflumilast")]),
+    },
+    quizData:{
+      matching:[{drug:"Roflumilast",condition:"Oral PDE4 inhibitor for severe COPD with frequent exacerbations"},{drug:"Roflumilast",condition:"Add-on anti-inflammatory, not a bronchodilator"},{drug:"Roflumilast",condition:"Causes weight loss and GI upset"},{drug:"Roflumilast",condition:"Can cause mood disturbance — ask about mental health"},{drug:"Roflumilast",condition:"For chronic bronchitis phenotype (productive cough)"}],
+      drugForCondition:[{condition:"Severe COPD, chronic bronchitis, frequent exacerbations despite inhalers — oral add-on",correct:"Roflumilast",distractors:["Salbutamol","Montelukast","Oseltamivir"]},{condition:"Oral PDE4 inhibitor that reduces COPD exacerbations",correct:"Roflumilast",distractors:["Theophylline","Tiotropium","Carbocisteine"]},{condition:"Anti-inflammatory COPD tablet associated with weight loss and mood changes",correct:"Roflumilast",distractors:["Beclometasone","Salmeterol","Ipratropium"]}],
+      conditionForDrug:[{drug:"Roflumilast",conditions:["Severe COPD with frequent exacerbations","Acute asthma","Allergic rhinitis","Hyperkalaemia"],correct:"Severe COPD with frequent exacerbations"},{drug:"Roflumilast",conditions:["PDE4 inhibitor add-on (not bronchodilator)","Immediate reliever","Asthma biologic","Mucolytic"],correct:"PDE4 inhibitor add-on (not bronchodilator)"}],
+      mcq:[{q:"Roflumilast inhibits which enzyme?",options:["PDE5","PDE4","Neuraminidase","ACE"],correct:"PDE4"},{q:"Roflumilast is indicated in?",options:["All asthma","Severe COPD with chronic bronchitis and frequent exacerbations","Mild COPD","Allergic rhinitis"],correct:"Severe COPD with chronic bronchitis and frequent exacerbations"},{q:"A characteristic side effect of roflumilast is?",options:["Weight gain","Weight loss","Hyperkalaemia","Bradycardia"],correct:"Weight loss"},{q:"Roflumilast can cause which neuropsychiatric effect?",options:["Mood disturbance / suicidal ideation","Tremor only","Euphoria","No CNS effects"],correct:"Mood disturbance / suicidal ideation"},{q:"Roflumilast is best described as?",options:["A bronchodilator","An anti-inflammatory add-on","A reliever","An antibiotic"],correct:"An anti-inflammatory add-on"}],
+      typing:[{scenario:"Name the oral PDE4 inhibitor used as an add-on in severe COPD with frequent exacerbations.",answer:"roflumilast"},{scenario:"Which enzyme does roflumilast inhibit (PDE-number)?",answer:"PDE4"},{scenario:"Roflumilast characteristically causes loss of what (monitor it)?",answer:"weight"}],
+    }
+  },
+
+  doxapram: {
+    slides:{
+      physiology:s("Breathing is driven by the respiratory centres in the brainstem, which respond to CO2 and oxygen levels via central and peripheral chemoreceptors. Respiratory stimulants ('analeptics') like doxapram act on these chemoreceptors and the respiratory centre to increase the rate and depth of breathing.",[bnf("dx1","Doxapram"),rang("dx2")]),
+      pathophysiology:s("In some patients with COPD and type 2 respiratory failure (rising CO2, falling oxygen), ventilation is inadequate. Doxapram can transiently stimulate breathing, but non-invasive ventilation (NIV) is now the preferred treatment. Doxapram's role is now very limited — a short-term bridge when ventilatory support is unavailable or contraindicated.",[nice("dx3","COPD","NG115")]),
+      actions:s("Doxapram is an IV respiratory stimulant that increases tidal volume and respiratory rate via chemoreceptor stimulation. Its effect is short-lived (given by infusion) and it has a narrow safety margin — overstimulation causes agitation, tachycardia, hypertension and seizures. Largely superseded by non-invasive ventilation.",[bnf("dx4","Doxapram")]),
+      prehospital:s("🚑 Setting: doxapram is a hospital-only IV infusion, used rarely in respiratory failure.\n\n⚠️ Hazards: narrow safety margin — can cause agitation, hypertension, arrhythmias and seizures. NIV (non-invasive ventilation) is the modern first-line for type 2 respiratory failure in COPD. Pre-hospital management of respiratory failure focuses on controlled oxygen and ventilatory support.",[jrc("dx5")]),
+      interactions:s("⚠️ MAOIs and sympathomimetics + doxapram = excessive pressor effect (hypertension, arrhythmia).\n⚠️ Theophylline + doxapram = additive CNS stimulation and agitation.\n⚠️ Avoid with drugs lowering the seizure threshold.",[bnf("dx6","Doxapram interactions")]),
+      indications:s("✅ Acute respiratory failure (type 2) as a short-term measure when NIV is unavailable or not tolerated — specialist use\n✅ Post-operative respiratory depression (occasionally)\n\nNow a niche drug — NIV is preferred wherever possible (NICE NG115).",[nice("dx7","COPD","NG115")]),
+      contraindications:s("⛔ Epilepsy / seizure disorders\n⛔ Severe hypertension, coronary artery disease, arrhythmias\n⛔ Severe asthma / status asthmaticus\n⛔ Physical airway obstruction\n⛔ Hyperthyroidism\n\n⚠️ Only where there is some ventilatory reserve to stimulate; useless if breathing is mechanically obstructed.",[bnf("dx8","Doxapram — contraindications")]),
+      dosages:s("💊 Doxapram IV: 1.5–4 mg/minute infusion, titrated to response (hospital, monitored)\n💊 Short-term bridging use only\n\n📋 Continuous monitoring of conscious level, BP, ECG and respiratory effort. Prefer NIV.",[bnf("dx9","Doxapram")]),
+    },
+    quizData:{
+      matching:[{drug:"Doxapram",condition:"IV respiratory stimulant in type 2 respiratory failure"},{drug:"Doxapram",condition:"Largely superseded by non-invasive ventilation"},{drug:"Doxapram",condition:"Narrow margin — can cause seizures and arrhythmias"},{drug:"Doxapram",condition:"Acts on chemoreceptors and the respiratory centre"},{drug:"Doxapram",condition:"Hospital-only short-term bridging measure"}],
+      drugForCondition:[{condition:"Short-term IV respiratory stimulant when NIV is unavailable in type 2 failure",correct:"Doxapram",distractors:["Salbutamol","Naloxone","Oseltamivir"]},{condition:"Analeptic acting on brainstem chemoreceptors to increase breathing",correct:"Doxapram",distractors:["Theophylline","Ipratropium","Montelukast"]},{condition:"Drug now largely replaced by non-invasive ventilation in COPD respiratory failure",correct:"Doxapram",distractors:["Carbocisteine","Beclometasone","Salmeterol"]}],
+      conditionForDrug:[{drug:"Doxapram",conditions:["Type 2 respiratory failure (short-term, when NIV unavailable)","First-line asthma preventer","Allergic rhinitis","Productive cough"],correct:"Type 2 respiratory failure (short-term, when NIV unavailable)"},{drug:"Doxapram",conditions:["Respiratory stimulant (analeptic)","Bronchodilator","Mucolytic","Antiviral"],correct:"Respiratory stimulant (analeptic)"}],
+      mcq:[{q:"Doxapram is classed as a?",options:["Bronchodilator","Respiratory stimulant (analeptic)","Mucolytic","Antibiotic"],correct:"Respiratory stimulant (analeptic)"},{q:"What is now the preferred treatment for type 2 respiratory failure in COPD?",options:["Doxapram","Non-invasive ventilation (NIV)","Theophylline","Oral steroids"],correct:"Non-invasive ventilation (NIV)"},{q:"A dangerous effect of doxapram overstimulation is?",options:["Bradycardia","Seizures and arrhythmias","Hypotension","Constipation"],correct:"Seizures and arrhythmias"},{q:"Doxapram acts on?",options:["Airway smooth muscle","Brainstem chemoreceptors / respiratory centre","Mast cells","Alveolar capillaries"],correct:"Brainstem chemoreceptors / respiratory centre"},{q:"Doxapram is contraindicated in?",options:["Epilepsy","Diabetes","Hypertension only mildly","Asthma mild"],correct:"Epilepsy"}],
+      typing:[{scenario:"Name the IV respiratory stimulant (analeptic) largely replaced by non-invasive ventilation.",answer:"doxapram"},{scenario:"What is the modern first-line treatment for type 2 respiratory failure in COPD (abbreviation)?",answer:"NIV"},{scenario:"Doxapram stimulates which brainstem structure to increase breathing?",answer:"respiratory centre"}],
+    }
+  },
+
+};
+
+const SYSTEM = {
+  id:"Respiratory", label:"Respiratory", icon:"🫁",
+  desc:"The complete respiratory pharmacology curriculum — every major airway and lung drug-class suffix and prefix.",
+  suffixes:[
+    { id:"terol",         affix:"-terol",          tk:"sky",     action:"Beta-2 Agonists (SABA/LABA)",            drugs:["Salbutamol","Salmeterol","Formoterol","Terbutaline"], difficulty:"Easy" },
+    { id:"tropium",       affix:"-tropium",        tk:"cyan",    action:"Antimuscarinic Bronchodilators (SAMA/LAMA)", drugs:["Ipratropium","Tiotropium","Glycopyrronium","Umeclidinium"], difficulty:"Medium" },
+    { id:"asone",         affix:"-asone / -onide", tk:"rose",    action:"Inhaled Corticosteroids (ICS)",          drugs:["Beclometasone","Budesonide","Fluticasone","Ciclesonide"], difficulty:"Easy" },
+    { id:"lukast",        affix:"-lukast",         tk:"violet",  action:"Leukotriene Receptor Antagonists",       drugs:["Montelukast","Zafirlukast"], difficulty:"Medium" },
+    { id:"phylline",      affix:"-phylline",       tk:"amber",   action:"Methylxanthines",                        drugs:["Theophylline","Aminophylline"], difficulty:"Hard" },
+    { id:"mab",           affix:"-mab",            tk:"teal",    action:"Monoclonal Antibody Biologics",          drugs:["Omalizumab","Mepolizumab","Benralizumab","Dupilumab"], difficulty:"Hard" },
+    { id:"carbocisteine", affix:"Carbocisteine",   tk:"emerald", action:"Mucolytics",                             drugs:["Carbocisteine","Acetylcysteine","Erdosteine"], difficulty:"Easy" },
+    { id:"fenadine",      affix:"-fenadine / -tadine", tk:"pink", action:"Antihistamines (H1 Blockers)",          drugs:["Cetirizine","Loratadine","Fexofenadine","Chlorphenamine"], difficulty:"Easy" },
+    { id:"tussive",       affix:"Antitussives",    tk:"purple",  action:"Cough Suppressants (Opioid & Non-opioid)", drugs:["Codeine","Pholcodine","Dextromethorphan"], difficulty:"Medium" },
+    { id:"vir",           affix:"-vir (NAI)",      tk:"indigo",  action:"Neuraminidase Inhibitors (Antivirals)",  drugs:["Oseltamivir","Zanamivir"], difficulty:"Medium" },
+    { id:"roflumilast",   affix:"Roflumilast",     tk:"orange",  action:"PDE4 Inhibitor",                         drugs:["Roflumilast"], difficulty:"Hard" },
+    { id:"doxapram",      affix:"Doxapram",        tk:"red",     action:"Respiratory Stimulant (Analeptic)",      drugs:["Doxapram"], difficulty:"Hard" },
+  ]
+};
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PART 4 — ICONS & RENDERING
+   Inline SVG icons and the render functions for every screen
+   ══════════════════════════════════════════════════════════════════════════ */
+
+const IC = {
+  menu:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>',
+  x:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+  settings:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+  heart:'<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+  heartBig:'<svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="opacity:0.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+  lungs:'<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2a1 1 0 0 1 1 1v8.5a2.5 2.5 0 0 0 .9-.2V9a1 1 0 0 1 2 0v1.5c1.6.5 3 2 3.4 4.2l.6 3.3a2.5 2.5 0 0 1-3.3 2.8l-1.6-.5A3.5 3.5 0 0 1 12 16.9V3a1 1 0 0 1 0-1zm0 0a1 1 0 0 0-1 1v13.9a3.5 3.5 0 0 1-3 4.2l-1.6.5A2.5 2.5 0 0 1 3.1 18l.6-3.3C4.1 12.5 5.5 11 7 10.5V9a1 1 0 0 1 2 0v2.3c.3.1.6.2.9.2V3a1 1 0 0 0-1-1z"/></svg>',
+  lungsBig:'<svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="opacity:0.85"><path d="M12 2a1 1 0 0 1 1 1v8.5a2.5 2.5 0 0 0 .9-.2V9a1 1 0 0 1 2 0v1.5c1.6.5 3 2 3.4 4.2l.6 3.3a2.5 2.5 0 0 1-3.3 2.8l-1.6-.5A3.5 3.5 0 0 1 12 16.9V3a1 1 0 0 1 0-1zm0 0a1 1 0 0 0-1 1v13.9a3.5 3.5 0 0 1-3 4.2l-1.6.5A2.5 2.5 0 0 1 3.1 18l.6-3.3C4.1 12.5 5.5 11 7 10.5V9a1 1 0 0 1 2 0v2.3c.3.1.6.2.9.2V3a1 1 0 0 0-1-1z"/></svg>',
+  arrowLeft:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
+  chevR:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>',
+  chevL:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>',
+  chevD:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>',
+  check:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  checkC:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+  checkSm:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+  xc:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+  file:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+  rotate:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>',
+};
+
+function grad(tk){ const t=T[tk]||T.rose; return `linear-gradient(to bottom right, ${t.g1}, ${t.g2})`; }
+function gradR(tk){ const t=T[tk]||T.rose; return `linear-gradient(to right, ${t.g1}, ${t.g2})`; }
+function escHtml(str){ return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function formatRef(r){ return `${r.author} (${r.year}) '${r.title}'. ${r.source}. Available at: ${r.url} [Accessed: ${r.accessed}].`; }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════════
+const state = {
+  view:'home',            // home | module | progress
+  activeSuffix:null,
+  phase:'slides',         // slides | quiz | done
+  slideIdx:0,
+  streak:0,
+  menuOpen:false,
+  settingsOpen:false,
+  completed:{},
+  totalScore:{correct:0,total:0},
+  enabledSections:{},
+  enabledQuizTypes:{},
+  biblioOpen:false,
+  // quiz engine state
+  quiz:null,
+};
+
+function diffClass(d){ return 'diff diff-'+d; }
+function streakClass(s){ return 'streak '+(s===0?'s0':s>=10?'s10':s>=5?'s5':'s1'); }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// RENDER: HEADER + SHELL
+// ═══════════════════════════════════════════════════════════════════════════
+
+function render(){
+  const root=document.getElementById('root');
+  let html='';
+  // header
+  const sub = (state.activeSuffix && state.view==='module') ? `<p>${escHtml(state.activeSuffix.affix)} — ${escHtml(state.activeSuffix.action)}</p>` : '';
+  html += `<header><div class="hbar">
+    <button class="burger" onclick="toggleMenu()">${state.menuOpen?IC.x:IC.menu}</button>
+    <div class="htitle"><h1>Pulmo<span>Pharm</span></h1>${sub}</div>
+    <div class="${streakClass(state.streak)}"><span class="flame ${state.streak>=5?'pulse':''}">🔥</span>${state.streak}</div>
+    <button class="settings-btn" onclick="openSettings()">${IC.settings}</button>
+  </div></header>`;
+  html += `<main class="wrap">`;
+  if(state.view==='home') html+=renderHome();
+  else if(state.view==='module') html+=renderModule();
+  else if(state.view==='progress') html+=renderProgress();
+  html += `</main>`;
+  // drawer
+  if(state.menuOpen) html+=renderDrawer();
+  if(state.settingsOpen) html+=renderSettings();
+  root.innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// HOME
+// ═══════════════════════════════════════════════════════════════════════════
+function renderHome(){
+  const done=SYSTEM.suffixes.filter(s=>state.completed[s.id]).length;
+  let h=`<div class="fade">`;
+  h+=`<div class="hero">
+    <div class="hero-top"><span class="hero-icon">${IC.lungsBig}</span>
+    <div><h2>Respiratory Pharmacology</h2><p>${escHtml(SYSTEM.desc)}</p></div></div>
+    <div class="chips">
+      <span class="chip">🚑 Pre-hospital</span>
+      <span class="chip">📚 Harvard refs</span>
+      <span class="chip">✅ ${done}/${SYSTEM.suffixes.length} done</span>
+      ${state.streak>0?`<span class="chip">🔥 ${state.streak} streak</span>`:''}
+    </div></div>`;
+  h+=`<h2 class="section-title">${SYSTEM.suffixes.length} Respiratory Drug Classes</h2>`;
+  h+=`<div class="grid">`;
+  SYSTEM.suffixes.forEach(sx=>{
+    const t=T[sx.tk]||T.rose;
+    const hasData=!!ALL_MODULES[sx.id];
+    h+=`<button class="card" onclick="startSuffix('${sx.id}')">
+      ${state.completed[sx.id]?`<div class="check-corner">${IC.checkC}</div>`:''}
+      <div class="card-badge" style="background:${grad(sx.tk)}"><span>${escHtml(sx.affix)}</span></div>
+      <div class="card-head"><h3>${escHtml(sx.action)}</h3><span class="${diffClass(sx.difficulty)}">${sx.difficulty}</span></div>
+      <p class="card-drugs">${escHtml(sx.drugs.slice(0,3).join(' · '))}${sx.drugs.length>3?'…':''}</p>
+      <div class="card-tags">
+        <span class="tag ${hasData?'tag-ready':'tag-soon'}">${hasData?'✓ Ready':'Soon'}</span>
+        <span class="tag tag-ph">🚑</span>
+        <span class="tag tag-ref">📚 Refs</span>
+      </div></button>`;
+  });
+  h+=`</div></div>`;
+  return h;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MODULE (slides / quiz / done)
+// ═══════════════════════════════════════════════════════════════════════════
+function renderModule(){
+  const sx=state.activeSuffix;
+  const md=ALL_MODULES[sx.id];
+  if(!md) return `<div class="coming-soon"><button class="back-btn" style="margin:0 auto 24px" onclick="goHome()">${IC.arrowLeft} Back</button><p>Module coming soon for ${escHtml(sx.affix)}.</p></div>`;
+  if(state.phase==='slides') return renderSlides(sx,md);
+  if(state.phase==='quiz') return renderQuiz(sx,md);
+  if(state.phase==='done') return renderDone(sx);
+}
+/* ════════════════════════════════════════════════════════════════════
+   PulmoPharm — index.html — PART 3 of 3   (lines 700-end)
+   Append directly after PART 2. Remaining render + event handlers, the
+   init call, then closes </script></body></html>.
+   ════════════════════════════════════════════════════════════════ */
+function enabledSlideSections(md){
+  return SLIDE_SECTIONS.filter(sec=>state.enabledSections[sec.key]!==false && md.slides[sec.key]);
+}
+
+function renderSlides(sx,md){
+  const t=T[sx.tk]||T.rose;
+  const secs=enabledSlideSections(md);
+  if(!secs.length) return `<div class="coming-soon"><p>No slide sections enabled.</p><button class="btn-rose" style="margin:16px auto 0" onclick="goHome()">Back</button></div>`;
+  if(state.slideIdx>=secs.length) state.slideIdx=secs.length-1;
+  const cur=secs[state.slideIdx];
+  const sd=md.slides[cur.key];
+  const content=typeof sd==='string'?sd:(sd.content||'');
+  const refs=typeof sd==='string'?[]:(sd.refs||[]);
+  const pct=Math.round(((state.slideIdx+1)/secs.length)*100);
+  let h=`<div class="fade">`;
+  h+=`<div class="progress-row"><button class="back-btn" onclick="goHome()">${IC.arrowLeft} Back</button><span class="progress-num">${state.slideIdx+1}/${secs.length}</span></div>`;
+  h+=`<div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${gradR(sx.tk)}"></div></div>`;
+  h+=`<div class="slide-header" style="background:${grad(sx.tk)}"><div class="slide-header-row"><span class="slide-header-icon">${cur.icon}</span><div><p class="label">${escHtml(sx.affix)} · ${escHtml(sx.action)}</p><h2>${escHtml(cur.label)}</h2></div></div></div>`;
+  if(cur.key==='prehospital') h+=`<div><span class="ph-badge">🚑 Pre-hospital Focus</span></div>`;
+  h+=`<div class="slide-body"><p class="slide-content">${escHtml(content)}</p>`;
+  // bibliography
+  if(refs.length){
+    h+=`<div class="biblio"><button class="biblio-toggle ${state.biblioOpen?'open':''}" onclick="toggleBiblio()">${IC.file} Bibliography — ${escHtml(cur.label)} <span class="chev">${IC.chevD}</span></button>`;
+    if(state.biblioOpen){
+      h+=`<ol class="biblio-list">`;
+      refs.forEach(r=>{ h+=`<li class="biblio-item"><span class="num">[${escHtml(r.id)}]</span>${escHtml(formatRef(r))} <a href="${escHtml(r.url)}" target="_blank" rel="noopener">[Link]</a></li>`; });
+      h+=`</ol>`;
+    }
+    h+=`</div>`;
+  }
+  h+=`</div>`;
+  if(cur.key==='dosages'){
+    h+=`<div class="drug-pills">`;
+    sx.drugs.forEach(d=>{ h+=`<span class="drug-pill" style="background:${t.light};color:${t.dark};border-color:${t.border}">${escHtml(d)}</span>`; });
+    h+=`</div>`;
+  }
+  h+=`<div class="nav-row">`;
+  h+=`<button class="nav-btn nav-prev" ${state.slideIdx===0?'disabled':''} onclick="prevSlide()">${IC.chevL} Prev</button>`;
+  if(state.slideIdx<secs.length-1) h+=`<button class="nav-btn nav-next" style="background:${gradR(sx.tk)}" onclick="nextSlide()">Next ${IC.chevR}</button>`;
+  else h+=`<button class="nav-btn nav-quiz" onclick="startQuiz()">Start Quizzes ${IC.chevR}</button>`;
+  h+=`</div></div>`;
+  return h;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// QUIZ ENGINE
+// ═══════════════════════════════════════════════════════════════════════════
+function enabledQuizTypeList(){ return QUIZ_TYPES.filter(qt=>state.enabledQuizTypes[qt.key]!==false); }
+
+function startQuiz(){
+  const md=ALL_MODULES[state.activeSuffix.id];
+  const types=enabledQuizTypeList().filter(qt=>md.quizData[qt.key]);
+  state.quiz={ types, ti:0, phase:'intro', qi:0, answered:false, selAns:null, score:{correct:0,total:0}, qScore:{correct:0,total:0}, matchSel:null, matched:[], shuffledOpts:null, typeRes:null, typeInput:'', mDrugs:null, mConds:null };
+  state.phase='quiz';
+  render();
+}
+
+function shuffle(a){ return [...a].sort(()=>0.5-Math.random()); }
+
+function renderQuiz(sx,md){
+  const q=state.quiz;
+  const t=T[sx.tk]||T.rose;
+  if(!q.types.length) return `<div class="coming-soon"><p>No quiz types enabled.</p><button class="btn-rose" style="margin:16px auto 0" onclick="finishModule()">Finish</button></div>`;
+  const ct=q.types[q.ti];
+  const qd=md.quizData[ct.key]||[];
+  if(q.phase==='intro'){
+    return `<div class="quiz-intro fade">
+      <button class="back-btn" style="margin:0 auto 20px" onclick="backToSlides()">${IC.arrowLeft} Back to Slides</button>
+      <div class="quiz-icon">${ct.icon}</div>
+      <div class="quiz-pill" style="background:${t.light};color:${t.dark};border-color:${t.border}">Quiz ${q.ti+1} of ${q.types.length}</div>
+      <h2>${escHtml(ct.label)}</h2>
+      <p class="sub">${escHtml(sx.affix)} — ${escHtml(sx.action)}</p>
+      <p class="count">${qd.length} question${qd.length!==1?'s':''}</p>
+      <button class="btn-primary" style="background:${gradR(sx.tk)}" onclick="beginQuiz()">Begin</button>
+    </div>`;
+  }
+  if(q.phase==='complete'){
+    const pct=Math.round((q.qScore.correct/Math.max(q.qScore.total,1))*100);
+    const emoji=pct>=80?'🏆':pct>=60?'⭐':'💊';
+    const last=q.ti+1>=q.types.length;
+    return `<div class="complete fade">
+      <div class="emoji">${emoji}</div>
+      <h2>${escHtml(ct.label)}</h2>
+      <p class="score">${q.qScore.correct} / ${q.qScore.total}</p>
+      <div class="complete-bar"><div class="complete-fill" style="width:${pct}%;background:${gradR(sx.tk)}"></div></div>
+      <button class="btn-primary" style="background:${gradR(sx.tk)}" onclick="nextQuizType()">${last?'Finish Module':'Next: '+escHtml(q.types[q.ti+1].label)}</button>
+    </div>`;
+  }
+  // playing
+  if(ct.key==='matching') return renderMatching(sx,md,t);
+  if(ct.key==='drugForCondition'||ct.key==='conditionForDrug'||ct.key==='mcq') return renderSingle(sx,md,t,ct);
+  if(ct.key==='typing') return renderTyping(sx,md,t);
+}
+
+function renderMatching(sx,md,t){
+  const q=state.quiz;
+  const qd=md.quizData.matching||[];
+  if(!q.mDrugs){ q.mDrugs=shuffle(qd); q.mConds=shuffle(qd); }
+  let h=`<div class="fade"><div class="match-head"><p>Tap a drug then its matching condition</p><span class="quiz-score" style="background:${t.light};color:${t.dark};border-color:${t.border}">${q.matched.length}/${qd.length}</span></div>`;
+  h+=`<div class="match-grid">`;
+  // drugs col
+  h+=`<div class="match-col"><p class="match-coltitle">Drugs</p>`;
+  q.mDrugs.forEach((item,i)=>{
+    const matched=q.matched.includes(item.condition);
+    const sel=q.matchSel&&q.matchSel.type==='drug'&&q.matchSel.item===item.condition;
+    const style=sel?`style="background:${gradR(sx.tk)}"`:'';
+    h+=`<button class="match-item ${matched?'matched':sel?'sel-drug':''}" ${style} ${matched?'disabled':''} onclick="matchTap('drug',${i})">${matched?'✓ ':''}${escHtml(item.drug)}</button>`;
+  });
+  h+=`</div>`;
+  // conds col
+  h+=`<div class="match-col"><p class="match-coltitle">Conditions</p>`;
+  q.mConds.forEach((item,i)=>{
+    const matched=q.matched.includes(item.condition);
+    const sel=q.matchSel&&q.matchSel.type==='cond'&&q.matchSel.item===item.condition;
+    h+=`<button class="match-item ${matched?'matched':sel?'sel-cond':''}" ${matched?'disabled':''} onclick="matchTap('cond',${i})">${matched?'✓ ':''}${escHtml(item.condition)}</button>`;
+  });
+  h+=`</div></div>`;
+  if(q.matched.length===qd.length) h+=`<button class="btn-full" style="background:${gradR(sx.tk)};padding:16px;border-radius:16px" onclick="quizComplete()">✓ All matched — Continue</button>`;
+  h+=`</div>`;
+  return h;
+}
+
+function renderSingle(sx,md,t,ct){
+  const q=state.quiz;
+  const qd=md.quizData[ct.key]||[];
+  const item=qd[q.qi];
+  if(!item) return '';
+  if(!q.shuffledOpts){
+    if(ct.key==='mcq') q.shuffledOpts=item.options;
+    else if(ct.key==='drugForCondition') q.shuffledOpts=shuffle([item.correct,...item.distractors]);
+    else q.shuffledOpts=shuffle(item.conditions);
+  }
+  const prompt=ct.key==='mcq'?item.q:ct.key==='drugForCondition'?item.condition:`Drug: ${item.drug}`;
+  const qlabel=ct.key==='mcq'?'Question':ct.key==='drugForCondition'?'Condition shown':'Drug given';
+  let h=`<div class="fade"><div class="quiz-head"><span class="quiz-qnum">Q${q.qi+1}/${qd.length}</span><span class="quiz-score" style="background:${t.light};color:${t.dark};border-color:${t.border}">${q.qScore.correct}/${q.qScore.total}</span></div>`;
+  h+=`<div class="quiz-prompt" style="background:${grad(sx.tk)}"><p class="qlabel">${qlabel}</p><p class="qtext">${escHtml(prompt)}</p></div>`;
+  h+=`<div class="options ${ct.key==='mcq'?'mcq':''}">`;
+  q.shuffledOpts.forEach((opt,i)=>{
+    let cls='opt';
+    let ic='';
+    if(q.answered){
+      const isOk=opt===item.correct, isSel=q.selAns===opt;
+      if(isOk){cls+=' correct';ic=`<span class="ic" style="color:#10b981">${IC.checkSm}</span>`;}
+      else if(isSel){cls+=' wrong';ic=`<span class="ic" style="color:#fb7185">${IC.xc}</span>`;}
+      else cls+=' dim';
+    }
+    h+=`<button class="${cls}" ${q.answered?'disabled':''} onclick="answerSingle(${i})"><span>${escHtml(opt)}</span>${ic}</button>`;
+  });
+  h+=`</div>`;
+  if(q.answered) h+=`<button class="btn-full" style="background:${gradR(sx.tk)}" onclick="advanceQuiz()">${q.qi+1<qd.length?'Next Question':'See Results'} ${IC.chevR}</button>`;
+  h+=`</div>`;
+  return h;
+}
+
+function renderTyping(sx,md,t){
+  const q=state.quiz;
+  const qd=md.quizData.typing||[];
+  const item=qd[q.qi];
+  if(!item) return '';
+  let h=`<div class="fade"><div class="quiz-head"><span class="quiz-qnum">Q${q.qi+1}/${qd.length}</span><span class="quiz-score" style="background:${t.light};color:${t.dark};border-color:${t.border}">${q.qScore.correct}/${q.qScore.total}</span></div>`;
+  h+=`<div class="quiz-prompt" style="background:${grad(sx.tk)}"><p class="qlabel">Clinical Scenario</p><p class="qtext" style="font-weight:500;line-height:1.5">${escHtml(item.scenario)}</p></div>`;
+  h+=`<input class="type-input" id="typeInput" placeholder="Type your answer..." value="${escHtml(q.typeInput)}" ${q.typeRes!==null?'disabled':''} oninput="state.quiz.typeInput=this.value" onkeydown="if(event.key==='Enter'&&this.value.trim()&&state.quiz.typeRes===null)checkTyping()">`;
+  if(q.typeRes===null) h+=`<button class="btn-full" style="background:${gradR(sx.tk)}" onclick="checkTyping()">Submit</button>`;
+  if(q.typeRes==='correct') h+=`<div class="type-result correct"><p>${IC.checkSm} Correct!</p></div>`;
+  if(q.typeRes==='wrong') h+=`<div class="type-result wrong"><p class="t">${IC.xc} Incorrect</p><p class="a">Answer: <strong>${escHtml(item.answer)}</strong></p></div>`;
+  if(q.typeRes!==null) h+=`<button class="btn-full" style="background:${gradR(sx.tk)};margin-top:8px" onclick="advanceQuiz()">${q.qi+1<qd.length?'Next':'Results'} ${IC.chevR}</button>`;
+  h+=`</div>`;
+  return h;
+}
+
+function renderDone(sx){
+  return `<div class="done fade">
+    <div class="trophy">🏆</div>
+    <h2>Module Complete!</h2>
+    <div class="done-pill" style="background:${gradR(sx.tk)}">${escHtml(sx.affix)} — ${escHtml(sx.action)}</div>
+    <div class="done-actions">
+      <button class="btn-outline" onclick="repeatModule()">${IC.rotate} Repeat</button>
+      <button class="btn-rose" onclick="goHome()">${IC.arrowLeft} More Classes</button>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PROGRESS
+// ═══════════════════════════════════════════════════════════════════════════
+function renderProgress(){
+  const done=SYSTEM.suffixes.filter(s=>state.completed[s.id]).length;
+  const stats=[{l:'Completed',v:done,e:'✅'},{l:'Total Classes',v:SYSTEM.suffixes.length,e:'🫁'},{l:'Correct',v:state.totalScore.correct,e:'🎯'},{l:'Streak',v:state.streak,e:'🔥'}];
+  let h=`<div class="fade"><h2 class="section-title" style="font-size:20px">My Progress</h2>`;
+  h+=`<div class="stats-grid">`;
+  stats.forEach(s=>{ h+=`<div class="stat"><div class="e">${s.e}</div><div class="v">${s.v}</div><div class="l">${s.l}</div></div>`; });
+  h+=`</div>`;
+  h+=`<div class="prog-classes"><div class="prog-chips">`;
+  SYSTEM.suffixes.forEach(sx=>{
+    h+=`<button class="prog-chip ${state.completed[sx.id]?'done':''}" onclick="startSuffix('${sx.id}')">${state.completed[sx.id]?'✓ ':''}${escHtml(sx.affix)}</button>`;
+  });
+  h+=`</div></div></div>`;
+  return h;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DRAWER + SETTINGS
+// ═══════════════════════════════════════════════════════════════════════════
+function renderDrawer(){
+  let h=`<div class="overlay" onclick="closeMenu()"><div class="overlay-bg"></div><div class="drawer" onclick="event.stopPropagation()">`;
+  h+=`<div class="drawer-head"><div class="drawer-brand"><div class="drawer-logo">${IC.lungs}</div><div><span class="n">Pulmo<span>Pharm</span></span><span class="t">UK Respiratory Pharmacology</span></div></div><button class="drawer-x" onclick="closeMenu()">${IC.x}</button></div>`;
+  h+=`<div class="drawer-body">`;
+  h+=`<p class="drawer-label">Navigation</p>`;
+  h+=`<button class="drawer-nav ${state.view==='home'?'active':''}" onclick="navTo('home')"><span>🫁</span>All Drug Classes</button>`;
+  h+=`<button class="drawer-nav ${state.view==='progress'?'active':''}" onclick="navTo('progress')"><span>📊</span>My Progress</button>`;
+  h+=`<p class="drawer-label">Drug Classes (${SYSTEM.suffixes.length})</p>`;
+  SYSTEM.suffixes.forEach(sx=>{
+    h+=`<button class="drawer-class" onclick="navModule('${sx.id}')"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(sx.affix)}</span><span class="cnt">${sx.drugs.length}</span></button>`;
+  });
+  h+=`</div></div></div>`;
+  return h;
+}
+
+function renderSettings(){
+  let h=`<div class="sheet" onclick="closeSettings()"><div class="sheet-bg"></div><div class="sheet-card" onclick="event.stopPropagation()">`;
+  h+=`<div class="sheet-head"><h2>Learning Settings</h2><button class="drawer-x" onclick="closeSettings()">${IC.x}</button></div>`;
+  h+=`<p class="sheet-label">📖 Slide Sections</p><div class="toggle-list">`;
+  SLIDE_SECTIONS.forEach(sec=>{
+    const on=state.enabledSections[sec.key]!==false;
+    h+=`<button class="toggle ${on?'on-sec':'off'}" onclick="toggleSection('${sec.key}')"><span>${sec.icon} ${escHtml(sec.label)}</span><div class="toggle-dot ${on?'on-sec':'off'}">${on?IC.check:''}</div></button>`;
+  });
+  h+=`</div>`;
+  h+=`<p class="sheet-label">📋 Quiz Types</p><div class="toggle-list">`;
+  QUIZ_TYPES.forEach(qt=>{
+    const on=state.enabledQuizTypes[qt.key]!==false;
+    h+=`<button class="toggle ${on?'on-quiz':'off'}" onclick="toggleQuiz('${qt.key}')"><span>${qt.icon} ${escHtml(qt.label)}</span><div class="toggle-dot ${on?'on-quiz':'off'}">${on?IC.check:''}</div></button>`;
+  });
+  h+=`</div>`;
+  h+=`<button class="sheet-done" onclick="closeSettings()">Done</button>`;
+  h+=`</div></div>`;
+  return h;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ACTIONS
+// ═══════════════════════════════════════════════════════════════════════════
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PART 5 — EVENT HANDLERS & INIT
+   Navigation, quiz interaction handlers, and app start-up
+   ══════════════════════════════════════════════════════════════════════════ */
+
+function toggleMenu(){ state.menuOpen=!state.menuOpen; render(); }
+function closeMenu(){ state.menuOpen=false; render(); }
+function openSettings(){ state.settingsOpen=true; render(); }
+function closeSettings(){ state.settingsOpen=false; render(); }
+function navTo(v){ state.view=v; state.menuOpen=false; render(); }
+function navModule(id){ state.menuOpen=false; startSuffix(id); }
+function startSuffix(id){ state.activeSuffix=SYSTEM.suffixes.find(s=>s.id===id); state.phase='slides'; state.slideIdx=0; state.biblioOpen=false; state.view='module'; render(); window.scrollTo(0,0); }
+function goHome(){ state.view='home'; state.phase='slides'; render(); window.scrollTo(0,0); }
+function prevSlide(){ if(state.slideIdx>0){state.slideIdx--;state.biblioOpen=false;render();window.scrollTo(0,0);} }
+function nextSlide(){ const md=ALL_MODULES[state.activeSuffix.id]; const secs=enabledSlideSections(md); if(state.slideIdx<secs.length-1){state.slideIdx++;state.biblioOpen=false;render();window.scrollTo(0,0);} }
+function toggleBiblio(){ state.biblioOpen=!state.biblioOpen; render(); }
+function backToSlides(){ state.phase='slides'; render(); window.scrollTo(0,0); }
+function repeatModule(){ state.phase='slides'; state.slideIdx=0; render(); window.scrollTo(0,0); }
+
+function toggleSection(k){ state.enabledSections[k]=state.enabledSections[k]===false?undefined:false; render(); }
+function toggleQuiz(k){ state.enabledQuizTypes[k]=state.enabledQuizTypes[k]===false?undefined:false; render(); }
+
+function setStreak(ok){ state.streak=ok?state.streak+1:0; }
+function recordAnswer(ok){
+  const q=state.quiz;
+  q.score.correct+=ok?1:0; q.score.total++;
+  q.qScore.correct+=ok?1:0; q.qScore.total++;
+  setStreak(ok);
+}
+
+function beginQuiz(){ state.quiz.phase='playing'; state.quiz.qi=0; state.quiz.answered=false; state.quiz.selAns=null; state.quiz.qScore={correct:0,total:0}; state.quiz.shuffledOpts=null; state.quiz.matchSel=null; state.quiz.matched=[]; state.quiz.mDrugs=null; state.quiz.mConds=null; state.quiz.typeRes=null; state.quiz.typeInput=''; render(); window.scrollTo(0,0); }
+
+function answerSingle(i){
+  const q=state.quiz; if(q.answered) return;
+  const opt=q.shuffledOpts[i];
+  const md=ALL_MODULES[state.activeSuffix.id];
+  const ct=q.types[q.ti];
+  const item=md.quizData[ct.key][q.qi];
+  q.selAns=opt; q.answered=true;
+  recordAnswer(opt===item.correct);
+  render();
+}
+
+function advanceQuiz(){
+  const q=state.quiz;
+  const md=ALL_MODULES[state.activeSuffix.id];
+  const ct=q.types[q.ti];
+  const qd=md.quizData[ct.key]||[];
+  if(q.qi+1<qd.length){ q.qi++; q.answered=false; q.selAns=null; q.shuffledOpts=null; q.typeRes=null; q.typeInput=''; render(); window.scrollTo(0,0); }
+  else quizComplete();
+}
+
+function quizComplete(){ state.quiz.phase='complete'; render(); window.scrollTo(0,0); }
+
+function nextQuizType(){
+  const q=state.quiz;
+  if(q.ti+1<q.types.length){
+    q.ti++; q.phase='intro'; q.qi=0; q.answered=false; q.selAns=null; q.qScore={correct:0,total:0}; q.shuffledOpts=null; q.matchSel=null; q.matched=[]; q.mDrugs=null; q.mConds=null; q.typeRes=null; q.typeInput='';
+    render(); window.scrollTo(0,0);
+  } else finishModule();
+}
+
+function finishModule(){
+  state.completed[state.activeSuffix.id]=true;
+  state.totalScore.correct+=state.quiz.score.correct;
+  state.totalScore.total+=state.quiz.score.total;
+  state.phase='done';
+  render(); window.scrollTo(0,0);
+}
+
+function matchTap(type,i){
+  const q=state.quiz;
+  const item=type==='drug'?q.mDrugs[i]:q.mConds[i];
+  if(q.matched.includes(item.condition)) return;
+  const otherType=type==='drug'?'cond':'drug';
+  if(q.matchSel&&q.matchSel.type===type&&q.matchSel.item===item.condition){ q.matchSel=null; render(); return; }
+  if(q.matchSel&&q.matchSel.type===otherType){
+    const ok=q.matchSel.item===item.condition;
+    if(ok) q.matched.push(item.condition);
+    q.matchSel=null;
+    recordAnswer(ok);
+  } else {
+    q.matchSel={type,item:item.condition};
+  }
+  render();
+}
+
+function checkTyping(){
+  const q=state.quiz;
+  const md=ALL_MODULES[state.activeSuffix.id];
+  const item=md.quizData.typing[q.qi];
+  const ok=q.typeInput.toLowerCase().trim().includes(item.answer.toLowerCase());
+  q.typeRes=ok?'correct':'wrong';
+  recordAnswer(ok);
+  render();
+}
+
+// init
+render();
+
+</script>
+</body>
+</html>
