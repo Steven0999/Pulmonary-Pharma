@@ -342,11 +342,6 @@ const ALL_MODULES = {
       typing:[{scenario:"A patient in life-threatening asthma already on salbutamol nebs — which antimuscarinic and dose do you add?",answer:"ipratropium 500"},{scenario:"Name the once-daily long-acting antimuscarinic that is a cornerstone of COPD maintenance.",answer:"tiotropium"},{scenario:"Antimuscarinics block which type of receptor in the airway?",answer:"muscarinic"}],
     }
   },
-/* ════════════════════════════════════════════════════════════════════
-   PulmoPharm — index.html — PART 2 of 3   (lines 352-699)
-   Append directly after PART 1. Continues the module data, the SYSTEM
-   definition, the icons, and the first render functions.
-   ════════════════════════════════════════════════════════════════ */
   asone: {
     slides:{
       physiology:s("Inhaled corticosteroids (ICS) enter airway cells and bind glucocorticoid receptors, switching off genes that drive inflammation and switching on anti-inflammatory genes. They reduce eosinophils, mast cells and cytokines in the airway mucosa. Delivered topically to the lungs, they control airway inflammation with far less systemic exposure than oral steroids.",[bnf("a1","Corticosteroids (inhaled)"),rang("a2")]),
@@ -567,13 +562,6 @@ const SYSTEM = {
     { id:"doxapram",      affix:"Doxapram",        tk:"red",     action:"Respiratory Stimulant (Analeptic)",      drugs:["Doxapram"], difficulty:"Hard" },
   ]
 };
-
-
-/* ══════════════════════════════════════════════════════════════════════════
-   PART 4 — ICONS & RENDERING
-   Inline SVG icons and the render functions for every screen
-   ══════════════════════════════════════════════════════════════════════════ */
-
 const IC = {
   menu:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>',
   x:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
@@ -694,11 +682,6 @@ function renderModule(){
   if(state.phase==='quiz') return renderQuiz(sx,md);
   if(state.phase==='done') return renderDone(sx);
 }
-/* ════════════════════════════════════════════════════════════════════
-   PulmoPharm — index.html — PART 3 of 3   (lines 700-end)
-   Append directly after PART 2. Remaining render + event handlers, the
-   init call, then closes </script></body></html>.
-   ════════════════════════════════════════════════════════════════ */
 function enabledSlideSections(md){
   return SLIDE_SECTIONS.filter(sec=>state.enabledSections[sec.key]!==false && md.slides[sec.key]);
 }
@@ -940,13 +923,7 @@ function renderSettings(){
 // ═══════════════════════════════════════════════════════════════════════════
 // ACTIONS
 // ═══════════════════════════════════════════════════════════════════════════
-
-
-/* ══════════════════════════════════════════════════════════════════════════
-   PART 5 — EVENT HANDLERS & INIT
-   Navigation, quiz interaction handlers, and app start-up
-   ══════════════════════════════════════════════════════════════════════════ */
-
+     
 function toggleMenu(){ state.menuOpen=!state.menuOpen; render(); }
 function closeMenu(){ state.menuOpen=false; render(); }
 function openSettings(){ state.settingsOpen=true; render(); }
